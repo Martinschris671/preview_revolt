@@ -1,4 +1,4 @@
-// Shared account state for the home screen (index.html) and the add-money screen (add-money.html).
+// Shared account state for the home screen (home.html) and the add-money screen (add-money.html).
 // Kept in localStorage; amounts are whole cents so there are no rounding errors.
 var BankStore = (function () {
   var KEY = 'bank.state';
