@@ -1,12 +1,11 @@
 // Service worker: makes the app installable and work offline.
 // App-shell cache: precache everything on install, serve cache-first, fall back to the network.
 // Bump CACHE whenever a file changes so clients pick up the new version.
-var CACHE = 'revolut-pwa-v2';
+var CACHE = 'revolut-pwa-v3';
 
 var ASSETS = [
   './',
   'index.html',
-  'home.html',
   'add-money.html',
   'styles.css',
   'add-money.css',
@@ -62,7 +61,7 @@ self.addEventListener('fetch', function (e) {
         return res;
       }).catch(function () {
         // offline and not cached: for a page navigation, fall back to home
-        if (req.mode === 'navigate') return caches.match('home.html');
+        if (req.mode === 'navigate') return caches.match('index.html');
       });
     })
   );

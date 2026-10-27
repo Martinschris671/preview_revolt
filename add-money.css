@@ -305,3 +305,9 @@ body.paying .method{ background:#191919; }
 /* no visible scrollbars (pages and sheets still scroll by touch, wheel and keyboard) */
 *{ scrollbar-width:none; -ms-overflow-style:none; }
 *::-webkit-scrollbar{ display:none; width:0; height:0; }
+
+/* no zoom / no text selection (inputs stay selectable) */
+html{ touch-action:manipulation; }
+*{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+input, textarea, [contenteditable]{ -webkit-user-select:text; user-select:text; }
+img, svg, button{ -webkit-user-drag:none; }

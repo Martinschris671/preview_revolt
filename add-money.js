@@ -206,7 +206,7 @@
     try { fromHome = sessionStorage.getItem('addmoney.from') === 'home'; sessionStorage.removeItem('addmoney.from'); } catch (e) {}
     PageTransition.go('back', function () {
       if (fromHome && history.length > 1) history.back();
-      else location.replace('home.html');
+      else location.replace('index.html');
     });
   }
   document.getElementById('back').addEventListener('click', leave);

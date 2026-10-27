@@ -4,6 +4,9 @@
 //   PageTransition.go('fwd' | 'back', function () { location.href = ... });
 var PageTransition = (function () {
   var KEY = 'pt.dir';
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var pageTheme = themeMeta ? themeMeta.getAttribute('content') : null;
+  function setTheme(c) { if (themeMeta) themeMeta.setAttribute('content', c); }
   var OUT_MS = 130, IN_MS = 280;
   var root = document.documentElement;
 
@@ -43,21 +46,23 @@ var PageTransition = (function () {
 
   function go(dir, navigate) {
     try { sessionStorage.setItem(KEY, dir); } catch (e) {}
+    setTheme('#000000');   // status bar fades to black with the page; the next page sets its own
     clearTimeout(inTimer);
     root.classList.remove('pt-in', 'pt-fwd', 'pt-back');
     root.classList.add('pt-out', 'pt-' + dir);
     setTimeout(navigate, OUT_MS);
     // if the navigation never happens (blocked, nothing to go back to), bring this page back
     setTimeout(function () {
-      if (root.classList.contains('pt-out')) { takeDir(); playIn(dir === 'fwd' ? 'back' : 'fwd'); }
+      if (root.classList.contains('pt-out')) { takeDir(); setTheme(pageTheme); playIn(dir === 'fwd' ? 'back' : 'fwd'); }
     }, 1500);
   }
 
-  playIn(takeDir());   // arriving: 'fwd' / 'back' from the page we came from, plain fade otherwise
+  var arriveDir = takeDir();
+  if (arriveDir) playIn(arriveDir);   // only animate when we came from another app page
 
   // coming back from the browser's back/forward cache: the page still has its "leaving" look
   window.addEventListener('pageshow', function (e) {
-    if (e.persisted) playIn(takeDir() || 'back');
+    if (e.persisted) { setTheme(pageTheme); playIn(takeDir() || 'back'); }
   });
 
   return { go: go };
