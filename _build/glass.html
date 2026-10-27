@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000}
+#s{position:relative;width:739px;height:1600px;overflow:hidden;
+background:linear-gradient(180deg,#a827f5 0%,#a32df5 2.5%,#a032f3 5%,#9a37f4 7.5%,#963bf2 10%,#9041f4 12.5%,#8a45f4 15%,#8449f3 17.5%,#7d4cf3 20%,#794ef3 22.5%,#764ff3 25%,#7251f2 27.5%,#6e51f1 30%,#6c51f2 32.5%,#6a50f1 35%,#674ff0 37.5%,#644eef 40%,#5f4eeb 42.5%,#594ee2 45%,#504ad2 47.5%,#4541b4 50%,#3e399f 52.5%,#39338d 55%,#372f85 57.5%,#342b7c 60%);}
+.strip{position:absolute;top:88px;width:80px;height:85px;border-radius:42px}
+</style></head><body><div id="s">
+<script>
+const values=[1.0,1.15,1.3,1.45,1.6];
+values.forEach((v,i)=>{
+  const d=document.createElement('div');
+  d.className='strip';
+  d.style.left=(20+i*90)+'px';
+  d.style.backdropFilter=`saturate(${v})`;
+  d.style.background='rgba(255,255,255,0.05)';
+  document.getElementById('s').appendChild(d);
+});
+</script></div></body></html>

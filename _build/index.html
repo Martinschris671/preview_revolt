@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=739, initial-scale=1">
+<title>Revolut — Home (exact)</title>
+<style>
+  /* ---------------------------------------------------------------
+     EXACT REPLICA — 739 x 1600 px reference frame
+     All coordinates are measured from the supplied screenshot.
+     Fonts: Inter Variable + Aeonik Pro Medium (from the Revolut APK)
+            + Roboto Medium (status bar)
+  ------------------------------------------------------------------ */
+  @font-face { font-family:"InterVar"; src:url("fonts/inter-var.ttf") format("truetype"); font-weight:100 900; }
+  @font-face { font-family:"Aeonik";   src:url("fonts/aeonik-medium.otf") format("opentype"); font-weight:500; }
+  @font-face { font-family:"RobotoNum";src:url("fonts/Roboto-Medium.ttf") format("truetype"); font-weight:500; }
+  @font-face { font-family:"RobotoNum";src:url("fonts/Roboto-Bold.ttf") format("truetype"); font-weight:700; }
+
+  :root{
+    --w: 739px;
+    --h: 1600px;
+    --white: #ffffff;
+    --ink-dim: rgba(255,255,255,.75);
+    --card: rgba(255,255,255,.07);
+    --circle: rgba(255,255,255,.18);
+    --positive: #00ae84;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:#101018; }
+  body{ display:flex; justify-content:center; }
+
+  #stage{
+    position:relative;
+    width:var(--w); height:var(--h);
+    overflow:hidden;
+    background: linear-gradient(180deg,
+      #a827f5 0%,    #a32df5 2.5%,  #a032f3 5%,   #9a37f4 7.5%,
+      #963bf2 10%,   #9041f4 12.5%, #8a45f4 15%,  #8449f3 17.5%,
+      #7d4cf3 20%,   #794ef3 22.5%, #764ff3 25%,  #7251f2 27.5%,
+      #6e51f1 30%,   #6c51f2 32.5%, #6a50f1 35%,  #674ff0 37.5%,
+      #644eef 40%,   #5f4eeb 42.5%, #594ee2 45%,  #504ad2 47.5%,
+      #4541b4 50%,   #3e399f 52.5%, #39338d 55%,  #372f85 57.5%,
+      #342b7c 60%,   #342b7e 62.5%, #342b7e 65%,  #362a7c 67.5%,
+      #362a7c 70%,   #332a7d 72.5%, #332a7d 75%,  #332c7c 77.5%,
+      #322a7d 80%,   #322a7d 82.5%, #322c7e 85%,  #2f2c7d 87.5%,
+      #302c7d 90%,   #302d7c 92.5%, #302d7c 95%,  #302d7c 97.5%,
+      #302e7c 100%);
+    color:#fff;
+    font-family:"InterVar", "Inter", sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .abs{ position:absolute; }
+
+  /* text helper: line-height 1, baseline = top + .8638em (Inter) */
+  .tx{ position:absolute; white-space:nowrap; line-height:1; color:#fff; }
+
+  /* ============================ STATUS BAR ============================ */
+  .clock{
+    left:74px; top:33.4px;
+    font-family:"RobotoNum"; font-size:32.8px; font-weight:700;
+    letter-spacing:2.2px;
+  }
+  .signal{ left:541px; top:40px; width:46px; height:21px; }
+  .fiveg{
+    left:590px; top:36px;
+    font-family:"RobotoNum"; font-size:28.5px; font-weight:700;
+    letter-spacing:.3px;
+  }
+  .battery{
+    left:636px; top:35.5px; width:48px; height:26px;
+    background:#fff; border-radius:7.5px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .battery span{
+    font-family:"RobotoNum"; font-weight:700; font-size:21px; line-height:1;
+    color:#8f33dd; letter-spacing:1.4px; margin-left:1px;
+  }
+  .nub{
+    left:685.5px; top:44px; width:3.5px; height:10px;
+    background:rgba(255,255,255,.55); border-radius:0 2px 2px 0;
+  }
+
+  /* ============================== HEADER ============================== */
+  .glass{
+    background:rgba(255,255,255,.02);
+    border:2px solid rgba(199,38,255,.88);
+    backdrop-filter:saturate(1.1);
+    -webkit-backdrop-filter:saturate(1.1);
+  }
+  .avatar{
+    left:37px; top:88px; width:85px; height:85px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .avatar span{
+    position:absolute; left:0; top:29px; width:85px; text-align:center;
+    font-size:26.2px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 14;
+    letter-spacing:.1px; line-height:1;
+  }
+  .search{
+    left:151px; top:88px; width:345px; height:85px; border-radius:42.5px;
+    display:flex; align-items:center;
+  }
+  .search .ic{ position:absolute; left:20px; top:22px; width:38px; height:38px; }
+  .search span{
+    position:absolute; left:78px; top:27.6px;
+    font-size:28.7px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 14;
+    letter-spacing:0; line-height:1; color:rgba(255,255,255,.97);
+  }
+  .hbtn{
+    top:88px; width:84px; height:85px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hbtn.a{ left:518px; }
+  .hbtn.b{ left:623px; }
+
+  /* ============================== BALANCE ============================= */
+  .bal-title{
+    left:0; top:353.4px; width:739px; text-align:center;
+    font-size:28.5px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 14;
+    line-height:1; color:rgba(255,255,255,.95); letter-spacing:-.05px;
+  }
+  .bal-amount .zero{
+    position:absolute; left:322px; top:390.5px;
+    font-family:"Aeonik"; font-size:90.3px; font-weight:500;
+    line-height:1; letter-spacing:-.0089em;
+  }
+  .bal-amount .euro{
+    position:absolute; left:388px; top:433px;
+    font-family:"Aeonik"; font-size:45.5px; font-weight:500;
+    line-height:1; letter-spacing:0;
+  }
+  .iban{
+    position:absolute; left:0; top:494.4px; width:739px; height:30px;
+  }
+  .iban svg{ position:absolute; left:159px; top:2px; width:25px; height:23px; }
+  .iban span{
+    position:absolute; left:203.5px; top:0;
+    font-size:28.5px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 14;
+    line-height:1; color:rgba(255,255,255,.93); letter-spacing:.15px; white-space:nowrap;
+  }
+
+  /* ============================= PAGE DOTS ============================ */
+  .dots{
+    left:292px; top:630px; width:155px; height:76px; border-radius:38px;
+    background:rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .dots i{ display:block; width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.45); }
+  .dots i.on{ width:12px; height:12px; background:#fff; }
+
+  /* =========================== QUICK ACTIONS ========================== */
+  .action{ position:absolute; top:761px; width:91px; text-align:center; }
+  .action .circle{
+    width:91px; height:91px; border-radius:50%;
+    background:var(--circle);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .action .label{
+    margin-top:0; position:absolute; top:109.2px; left:-40px; width:171px;
+    font-size:27.9px; font-weight:600; font-variation-settings:"wght" 600,"opsz" 14;
+    line-height:1; text-align:center; white-space:nowrap; color:#fff;
+  }
+  .act1{ left:70px; } .act2{ left:239.5px; } .act3{ left:409px; } .act4{ left:578.5px; }
+
+  /* ============================ SETUP CARD ============================ */
+  .setup{
+    left:30px; top:939px; width:679px; height:259px;
+    border-radius:28px; background:rgba(255,255,255,.07);
+  }
+  .ring{ position:absolute; left:31px; top:21px; width:76px; height:76px; }
+  .ring .pct{
+    position:absolute; left:0; top:26px; width:76px; text-align:center;
+    font-size:26px; font-weight:700; font-variation-settings:"wght" 700,"opsz" 18;
+    line-height:1; letter-spacing:-.2px;
+  }
+  .setup h2{
+    position:absolute; left:138px; top:24.7px;
+    font-size:32.8px; font-weight:700; font-variation-settings:"wght" 700,"opsz" 16;
+    line-height:1; letter-spacing:-.35px; color:#fff;
+  }
+  .setup .desc{
+    position:absolute; left:138px; top:62.6px; width:470px;
+    font-size:28.7px; font-weight:400; font-variation-settings:"wght" 400,"opsz" 14;
+    line-height:34px; color:rgba(255,255,255,.75); letter-spacing:.05px;
+  }
+  .cta{
+    position:absolute; left:30px; top:160px; width:619px; height:77px;
+    border-radius:38.5px; background:#fff;
+  }
+  .cta span{
+    position:absolute; left:0; top:25.2px; width:619px; text-align:center;
+    font-size:28.7px; font-weight:700; font-variation-settings:"wght" 700,"opsz" 14;
+    color:#0a0a0f; letter-spacing:-.15px; line-height:1;
+  }
+
+  /* ============================= FEED CARD ============================ */
+  .feed{
+    left:30px; top:1244px; width:679px; height:520px;
+    border-radius:28px; background:rgba(255,255,255,.07);
+  }
+  .row{ position:absolute; left:0; width:679px; height:136px; }
+  .row .ico{ position:absolute; left:30px; top:0; width:76px; height:76px; border-radius:50%; }
+  .row .title{
+    position:absolute; left:137px; top:3.7px;
+    font-size:32.8px; font-weight:600; font-variation-settings:"wght" 600,"opsz" 16;
+    line-height:1; color:#fff;
+  }
+  .row .sub{
+    position:absolute; left:137px; top:44.2px;
+    font-size:28.7px; font-weight:400; font-variation-settings:"wght" 400,"opsz" 14;
+    line-height:1; color:rgba(255,255,255,.75);
+  }
+  .row .amt{
+    position:absolute; right:32px; top:4.7px;
+    font-size:32.8px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 16;
+    line-height:1; color:#fff; letter-spacing:.6px;
+  }
+  .row .amt.pos{ color:var(--positive); }
+  .aircash{ left:60px; top:22px; background:#e10231; display:flex; align-items:center; justify-content:center; }
+  .aircash .logo{
+    color:#fff; font-size:13px; font-weight:700; letter-spacing:-.3px;
+    display:flex; align-items:center; gap:2.5px; margin-top:-1px;
+  }
+  .aircash .wing{ display:flex; flex-direction:column; gap:1.6px; }
+  .aircash .wing i{ display:block; width:6.5px; height:1.7px; background:#fff; border-radius:1px; }
+  .apple{ left:60px; top:22px; background:#0d0c14; display:flex; align-items:center; justify-content:center; }
+  .apple svg{ width:30px; height:36px; margin-top:-4px; opacity:.93; }
+
+  /* =========================== BOTTOM NAV ============================= */
+  .nav{
+    left:30px; top:1443px; width:679px; height:118px;
+    border-radius:59px;
+    background:rgba(12,10,42,.56);
+    border:1.5px solid rgba(112,104,225,.55);
+    backdrop-filter:blur(20px) saturate(1.15);
+    -webkit-backdrop-filter:blur(20px) saturate(1.15);
+  }
+  .nav .active-blob{
+    position:absolute; left:22px; top:6px; width:140px; height:106px;
+    border-radius:53px;
+    background:rgba(255,255,255,.14);
+    filter:blur(7px);
+  }
+  .tab{ position:absolute; top:0; width:128px; height:118px; }
+  .tab .ticon{ position:absolute; left:50%; transform:translateX(-50%); top:28px; }
+  .tab .tlabel{
+    position:absolute; left:50%; transform:translateX(-50%); top:77.6px;
+    font-size:17.2px; font-weight:500; font-variation-settings:"wght" 500,"opsz" 12;
+    line-height:1; white-space:nowrap; color:rgba(255,255,255,.62);
+  }
+  .tab.active .tlabel{ color:#fff; }
+  .tab.active .ticon{ color:#fff; }
+  .t1{ left:18px; } .t2{ left:145px; } .t3{ left:273.5px; } .t4{ left:402.5px; } .t5{ left:531.5px; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ===== status bar ===== -->
+  <div class="tx clock">20:33</div>
+
+  <svg class="abs signal" viewBox="0 0 46 21" fill="none">
+    <rect x="0"  y="12" width="6" height="9"  rx="1.6" fill="#fff"/>
+    <rect x="10" y="8"  width="6" height="13" rx="1.6" fill="#fff"/>
+    <rect x="22" y="4"  width="6" height="17" rx="1.6" fill="rgba(255,255,255,.36)"/>
+    <rect x="34" y="0"  width="6" height="21" rx="1.6" fill="rgba(255,255,255,.36)"/>
+  </svg>
+
+  <div class="tx fiveg">5G</div>
+
+  <div class="abs battery"><span>90</span></div>
+  <div class="abs nub"></div>
+
+  <!-- ===== header ===== -->
+  <div class="abs avatar glass"><span>NN</span></div>
+
+  <div class="abs search glass">
+    <svg class="ic" viewBox="0 0 24 24" fill="none">
+      <circle cx="10.4" cy="10.4" r="7.4" stroke="#fff" stroke-width="2.9"/>
+      <path d="M16.1 16.1 L21.4 21.4" stroke="#fff" stroke-width="2.9" stroke-linecap="round"/>
+    </svg>
+    <span>Pretraživanje</span>
+  </div>
+
+  <div class="abs hbtn a glass">
+    <svg width="38" height="35" viewBox="0 0 38 35" fill="#fff">
+      <rect x="0"  y="14" width="10" height="21" rx="5"/>
+      <rect x="13" y="0"  width="11" height="35" rx="5.5"/>
+      <rect x="28" y="9"  width="10" height="26" rx="5"/>
+    </svg>
+  </div>
+
+  <div class="abs hbtn b glass">
+    <svg width="38" height="26" viewBox="0 0 38 26">
+      <defs><mask id="cardmask">
+        <rect width="38" height="26" fill="#fff"/>
+        <rect x="0" y="6.4" width="38" height="2.8" fill="#000"/>
+        <rect x="5.5" y="17.6" width="12" height="3.4" rx="1.7" fill="#000"/>
+      </mask></defs>
+      <rect width="38" height="26" rx="6.2" fill="#fff" mask="url(#cardmask)"/>
+    </svg>
+  </div>
+
+  <!-- ===== balance ===== -->
+  <div class="tx bal-title">Osobni · EUR</div>
+  <div class="bal-amount"><span class="zero">0</span><span class="euro">€</span></div>
+  <div class="iban">
+    <svg viewBox="0 0 24 23" fill="#fff">
+      <path d="M12 0 24 6.6v2.4H0V6.6z"/>
+      <rect x="3.4" y="10.6" width="5" height="8.6" rx=".8"/>
+      <rect x="15.6" y="10.6" width="5" height="8.6" rx=".8"/>
+      <rect x="0.4" y="20.2" width="23.2" height="2.6" rx="1"/>
+    </svg>
+    <span>LT31 3250 0074 9233 9748</span>
+  </div>
+
+  <!-- ===== page dots ===== -->
+  <div class="abs dots"><i class="on"></i><i></i><i></i></div>
+
+  <!-- ===== quick actions ===== -->
+  <div class="action act1">
+    <div class="circle">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M18 2.6V33.4M2.6 18H33.4" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="label">Dodaj novac</div>
+  </div>
+
+  <div class="action act2">
+    <div class="circle">
+      <svg width="41" height="34" viewBox="0 0 41 34" fill="none">
+        <path d="M2 11.6h6.6c6.4 0 7.2-7.6 13.6-7.6H29" stroke="#fff" stroke-width="4.4" stroke-linecap="round"/>
+        <path d="M2 22.4h6.6c6.4 0 7.2 7.6 13.6 7.6H29" stroke="#fff" stroke-width="4.4" stroke-linecap="round"/>
+        <path d="M26.5 0.4 39.2 4 26.5 10 Z" fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M26.5 24 39.2 30 26.5 33.6 Z" fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="label">Prebaci</div>
+  </div>
+
+  <div class="action act3">
+    <div class="circle">
+      <svg width="38" height="36" viewBox="0 0 38 36" fill="#fff">
+        <path d="M19 0 38 10v3.6H0V10z"/>
+        <path d="M19 3.4 32.4 10H5.6z" fill="none" stroke="#fff" stroke-width="1.4" opacity=".55"/>
+        <rect x="5.4" y="16.4" width="7.6" height="14.2" rx="1.4"/>
+        <rect x="25" y="16.4" width="7.6" height="14.2" rx="1.4"/>
+        <rect x="0.6" y="32" width="36.8" height="4" rx="1.6"/>
+      </svg>
+    </div>
+    <div class="label">Pojedinosti</div>
+  </div>
+
+  <div class="action act4">
+    <div class="circle">
+      <svg width="35" height="8" viewBox="0 0 35 8" fill="#fff">
+        <circle cx="4" cy="4" r="4"/><circle cx="17.5" cy="4" r="4"/><circle cx="31" cy="4" r="4"/>
+      </svg>
+    </div>
+    <div class="label">Više</div>
+  </div>
+
+  <!-- ===== setup card ===== -->
+  <div class="abs setup">
+    <div class="ring">
+      <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+        <circle cx="38" cy="38" r="34.5" stroke="#6d659e" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="36.1 180.7"/>
+        <circle cx="38" cy="38" r="34.5" stroke="#73a2ff" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="144.5 72.3" transform="rotate(120 38 38)"/>
+      </svg>
+      <div class="pct">4/5</div>
+    </div>
+    <h2>Dovršite postavljanje</h2>
+    <div class="desc">Najbolje iskoristite Revolut uz par jednostavnih koraka.</div>
+    <div class="cta"><span>Dovršite postavljanje</span></div>
+  </div>
+
+  <!-- ===== feed ===== -->
+  <div class="abs feed">
+    <div class="row" style="top:22px">
+      <div class="ico aircash">
+        <div class="logo">
+          <div class="wing"><i></i><i></i><i></i></div>
+          <span>aircash</span>
+          <div class="wing"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="title" style="left:137px">aircash.eu</div>
+      <div class="sub" style="left:137px">Danas, 00:46</div>
+      <div class="amt" style="right:32px">-10&nbsp;€</div>
+    </div>
+
+    <div class="row" style="top:158px">
+      <div class="ico apple">
+        <svg viewBox="0 0 384 512" fill="#fff">
+          <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+        </svg>
+      </div>
+      <div class="title" style="left:137px; top:4.7px">Novac dodan putem</div>
+      <div class="amt pos" style="right:32px; top:4.7px">+10&nbsp;€</div>
+    </div>
+  </div>
+
+  <!-- ===== bottom nav ===== -->
+  <nav class="abs nav">
+    <div class="active-blob"></div>
+
+    <div class="tab t1 active">
+      <div class="ticon" style="top:27px;width:34px;height:37px;text-align:center;font-family:Aeonik;font-size:51px;line-height:35px;font-weight:500;color:#fff">R</div>
+      <div class="tlabel">Početna</div>
+    </div>
+
+    <div class="tab t2">
+      <svg class="ticon" style="top:27px" width="36" height="37" viewBox="0 0 34 36" fill="none">
+        <path d="M1.6 11.6c3.2-4.4 5.9-4.8 9-1.4 3.2 3.5 5.8 3.2 8.8-.6 3-3.8 5.8-5.6 9.4-5.8"
+              stroke="rgba(255,255,255,.8)" stroke-width="3.2" stroke-linecap="round"/>
+        <rect x="0.6" y="24" width="4.6" height="12" rx="2.3" fill="rgba(255,255,255,.8)"/>
+        <rect x="9.6" y="19" width="4.6" height="17" rx="2.3" fill="rgba(255,255,255,.8)"/>
+        <rect x="18.6" y="24" width="4.6" height="12" rx="2.3" fill="rgba(255,255,255,.8)"/>
+        <rect x="27.6" y="9" width="4.6" height="27" rx="2.3" fill="rgba(255,255,255,.8)"/>
+      </svg>
+      <div class="tlabel">Ulaganje</div>
+    </div>
+
+    <div class="tab t3">
+      <svg class="ticon" style="top:26px" width="39" height="38" viewBox="0 0 39 38" fill="rgba(255,255,255,.8)">
+        <rect x="4" y="5.5" width="22" height="7.4" rx="3.2"/>
+        <path d="M25 0.5 39 9.2 25 17.9 Z" stroke="rgba(255,255,255,.8)" stroke-width="2.5" stroke-linejoin="round"/>
+        <rect x="13" y="25.1" width="22" height="7.4" rx="3.2"/>
+        <path d="M14 19.1 0 27.8 14 36.5 Z" stroke="rgba(255,255,255,.8)" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="tlabel">Plaćanja</div>
+    </div>
+
+    <div class="tab t4">
+      <div class="ticon" style="width:40px;height:38px;position:absolute;left:50%;transform:translateX(-50%);top:31px;text-align:center;font-size:42px;line-height:30px;font-weight:500;font-variation-settings:"wght" 500,"opsz" 24;color:rgba(255,255,255,.8)">₿</div>
+      <div class="tlabel">Kriptovalute</div>
+    </div>
+
+    <div class="tab t5">
+      <svg class="ticon" style="top:25px" width="36" height="40" viewBox="0 0 36 40">
+        <defs><mask id="revmask">
+          <path d="M18 0 36 10v20L18 40 0 30V10z" fill="#fff"/>
+          <path d="M18 9.2c1 5.1 2.7 6.8 7.8 7.8-5.1 1-6.8 2.7-7.8 7.8-1-5.1-2.7-6.8-7.8-7.8 5.1-1 6.8-2.7 7.8-7.8z" fill="#000"/>
+        </mask></defs>
+        <rect width="36" height="40" fill="#d9d8e6" mask="url(#revmask)"/>
+      </svg>
+      <div class="tlabel">RevPoints</div>
+    </div>
+  </nav>
+
+</div>
+
+<script>
+/* Fit the fixed 739x1600 reference frame into a narrower viewport.
+   At width >= 739 the stage renders at exactly 1:1 (no transform). */
+(function () {
+  var stage = document.getElementById('stage');
+  function fit() {
+    var s = Math.min(1, window.innerWidth / 739);
+    if (s < 1) {
+      stage.style.transformOrigin = 'top left';
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.width = (739 * s) + 'px';
+      document.body.style.height = (1600 * s) + 'px';
+      document.body.style.overflow = 'hidden';
+    } else {
+      stage.style.transform = 'none';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.overflow = '';
+    }
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body>
+</html>

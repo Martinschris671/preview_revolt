@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Font Tester</title>
+<style>
+  @font-face { font-family:"T Aeonik Black";      src:url("fonts/aeonik_pro_black.otf") format("opentype"); }
+  @font-face { font-family:"T Aeonik Medium";     src:url("fonts/aeonik_pro_medium.otf") format("opentype"); }
+  @font-face { font-family:"T Inter";             src:url("fonts/inter_variable.ttf") format("truetype"); font-weight:100 900; }
+  @font-face { font-family:"T Roboto Bold";       src:url("_build/fonts/Roboto-Bold.ttf") format("truetype"); }
+  @font-face { font-family:"T Roboto Medium";     src:url("_build/fonts/Roboto-Medium.ttf") format("truetype"); }
+  @font-face { font-family:"T Roboto Condensed";  src:url("fonts/roboto_condensed_bold.ttf") format("truetype"); }
+  @font-face { font-family:"T Roboto Numbers";    src:url("fonts/roboto_medium_numbers.ttf") format("truetype"); }
+  @font-face { font-family:"T Cormorant";         src:url("fonts/cormorant_garamond_regular.ttf") format("truetype"); }
+  @font-face { font-family:"T Parisienne";        src:url("fonts/parisienne_regular.ttf") format("truetype"); }
+  @font-face { font-family:"T Yellowtail";        src:url("fonts/yellowtail_regular.ttf") format("truetype"); }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:"T Inter", system-ui, sans-serif;
+    background:#14112e; color:#fff;
+    padding:16px; padding-bottom:140px;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1{ font-size:20px; font-weight:700; margin-bottom:4px; }
+  .hint{ font-size:13px; color:rgba(255,255,255,.6); margin-bottom:16px; }
+
+  /* controls */
+  .controls{
+    position:sticky; top:0; z-index:5;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px 16px;
+    background:rgba(20,17,46,.92); backdrop-filter:blur(12px);
+    padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.1);
+    margin-bottom:16px;
+  }
+  .controls label{ display:flex; flex-direction:column; gap:4px; font-size:12px; color:rgba(255,255,255,.7); }
+  .controls label b{ color:#fff; font-weight:600; }
+  .controls input[type=text]{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#fff; border-radius:8px; padding:7px 9px; font:inherit; font-size:14px; }
+  .controls input[type=range]{ width:100%; accent-color:#a96bff; }
+  .controls button{ background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.15); border-radius:8px; padding:8px; font:inherit; font-size:13px; cursor:pointer; align-self:end; }
+
+  /* grid of samples */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px; }
+  .card{
+    border-radius:18px; overflow:hidden; cursor:pointer;
+    border:2px solid transparent; transition:border-color .15s, transform .15s;
+  }
+  .card:hover{ transform:translateY(-2px); }
+  .card.picked{ border-color:#fff; }
+  .preview{
+    height:190px;
+    background:linear-gradient(180deg, #8a45f4 0%, #764ff3 40%, #6a50f1 75%, #644eef 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .preview .lbl{ font-family:"T Inter"; font-size:15px; font-weight:500; color:rgba(255,255,255,.95); }
+  .preview .amt{ display:flex; align-items:baseline; line-height:1; margin:6px 0 9px; }
+  .preview .iban{ font-family:"T Inter"; font-size:15px; font-weight:500; color:rgba(255,255,255,.93); }
+  .meta{ background:#1e1a40; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .meta .name{ font-size:14px; font-weight:600; }
+  .meta .file{ font-size:11px; color:rgba(255,255,255,.5); }
+  .meta .tag{ font-size:11px; padding:3px 7px; border-radius:6px; background:rgba(255,255,255,.1); white-space:nowrap; }
+
+  /* chosen font CSS */
+  .pick{
+    position:fixed; left:16px; right:16px; bottom:16px; z-index:6;
+    background:#1e1a40; border:1px solid rgba(255,255,255,.15); border-radius:14px;
+    padding:12px; display:none; gap:10px; align-items:center;
+  }
+  .pick.show{ display:flex; }
+  .pick pre{ flex:1; font:12px/1.5 ui-monospace, Consolas, monospace; white-space:pre-wrap; color:#d9d2ff; overflow:auto; max-height:90px; }
+  .pick button{ background:#fff; color:#111; border:0; border-radius:8px; padding:9px 14px; font:inherit; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+  <h1>Font Tester</h1>
+  <p class="hint">Every font in your folders, rendered as the balance. Change the settings, then click a card to get its CSS.</p>
+
+  <div class="controls">
+    <label>Amount <input type="text" id="amount" value="10"></label>
+    <label>Currency <input type="text" id="cur" value="€"></label>
+    <label>Size <b id="sizeV">48px</b><input type="range" id="size" min="24" max="96" value="48"></label>
+    <label>€ size (× digits) <b id="ratioV">0.52</b><input type="range" id="ratio" min="0.3" max="1" step="0.01" value="0.52"></label>
+    <label>Letter spacing <b id="lsV">0.092em</b><input type="range" id="ls" min="-0.1" max="0.2" step="0.002" value="0.092"></label>
+    <label>€ gap <b id="gapV">1.6px</b><input type="range" id="gap" min="-4" max="16" step="0.2" value="1.6"></label>
+    <label>Inter weight <b id="wV">700</b><input type="range" id="w" min="100" max="900" step="50" value="700"></label>
+    <button id="reset">Reset</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="pick" id="pick"><pre id="css"></pre><button id="copy">Copy</button></div>
+
+<script>
+  var FONTS = [
+    { name:"Aeonik Pro Black",   family:"T Aeonik Black",     file:"fonts/aeonik_pro_black.otf",       weight:900, tag:"Revolut balance" },
+    { name:"Aeonik Pro Medium",  family:"T Aeonik Medium",    file:"fonts/aeonik_pro_medium.otf",      weight:500, tag:"Revolut" },
+    { name:"Inter (variable)",   family:"T Inter",            file:"fonts/inter_variable.ttf",         weight:"var", tag:"weight slider" },
+    { name:"Roboto Bold",        family:"T Roboto Bold",      file:"_build/fonts/Roboto-Bold.ttf",     weight:700, tag:"Android" },
+    { name:"Roboto Medium",      family:"T Roboto Medium",    file:"_build/fonts/Roboto-Medium.ttf",   weight:500, tag:"Android" },
+    { name:"Roboto Condensed Bold", family:"T Roboto Condensed", file:"fonts/roboto_condensed_bold.ttf", weight:700, tag:"" },
+    { name:"Roboto Medium Numbers", family:"T Roboto Numbers", file:"fonts/roboto_medium_numbers.ttf", weight:500, tag:"digits only" },
+    { name:"SF Pro (system)",    family:"-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui", file:"built into iPhone / Mac", weight:"var", tag:"iOS only" },
+    { name:"Cormorant Garamond", family:"T Cormorant",        file:"fonts/cormorant_garamond_regular.ttf", weight:400, tag:"serif" },
+    { name:"Parisienne",         family:"T Parisienne",       file:"fonts/parisienne_regular.ttf",     weight:400, tag:"script" },
+    { name:"Yellowtail",         family:"T Yellowtail",       file:"fonts/yellowtail_regular.ttf",     weight:400, tag:"script" }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var grid = $("grid"), picked = null;
+
+  FONTS.forEach(function (f, i) {
+    var card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML =
+      '<div class="preview">' +
+        '<div class="lbl">Osobni · EUR</div>' +
+        '<div class="amt"><span class="int"></span><span class="cur"></span></div>' +
+        '<div class="iban">LT00 0000 0000 0000 0000</div>' +
+      '</div>' +
+      '<div class="meta"><div><div class="name">' + f.name + '</div><div class="file">' + f.file + '</div></div>' +
+      (f.tag ? '<span class="tag">' + f.tag + '</span>' : '') + '</div>';
+    card.onclick = function () {
+      document.querySelectorAll(".card").forEach(function (c) { c.classList.remove("picked"); });
+      card.classList.add("picked"); picked = i; showCss();
+    };
+    f.el = card;
+    grid.appendChild(card);
+  });
+
+  function val(id) { return parseFloat($(id).value); }
+
+  function update() {
+    var size = val("size"), ratio = val("ratio"), ls = val("ls"), gap = val("gap"), w = val("w");
+    $("sizeV").textContent = size + "px";
+    $("ratioV").textContent = ratio.toFixed(2);
+    $("lsV").textContent = ls.toFixed(3) + "em";
+    $("gapV").textContent = gap + "px";
+    $("wV").textContent = w;
+    FONTS.forEach(function (f) {
+      var amt = f.el.querySelector(".amt"), i = amt.querySelector(".int"), c = amt.querySelector(".cur");
+      amt.style.fontFamily = f.family.indexOf(",") > -1 ? f.family : '"' + f.family + '"';
+      amt.style.fontWeight = f.weight === "var" ? w : f.weight;
+      i.textContent = $("amount").value;
+      c.textContent = $("cur").value;
+      i.style.fontSize = size + "px";
+      i.style.letterSpacing = ls + "em";
+      c.style.fontSize = (size * ratio).toFixed(1) + "px";
+      c.style.marginLeft = gap + "px";
+    });
+    if (picked !== null) showCss();
+  }
+
+  function showCss() {
+    var f = FONTS[picked], size = val("size"), ratio = val("ratio");
+    var weight = f.weight === "var" ? val("w") : f.weight;
+    var face = f.file.indexOf("/") > -1
+      ? '@font-face { font-family:"' + f.name + '"; src:url("' + f.file + '"); font-weight:' + (f.weight === "var" ? "100 900" : f.weight) + '; }\n'
+      : "";
+    var fam = f.file.indexOf("/") > -1 ? '"' + f.name + '"' : f.family;
+    $("css").textContent =
+      face +
+      '.amount{ font-family:' + fam + '; font-weight:' + weight + '; line-height:1; }\n' +
+      '.amount .int{ font-size:' + (size / 10).toFixed(3) + 'rem; letter-spacing:' + val("ls").toFixed(3) + 'em; }\n' +
+      '.amount .cur{ font-size:' + (size * ratio / 10).toFixed(2) + 'rem; margin-left:' + (val("gap") / 10).toFixed(2) + 'rem; }';
+    $("pick").classList.add("show");
+  }
+
+  $("copy").onclick = function () {
+    var t = $("css").textContent, b = $("copy");
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(
+      function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1200); },
+      function () { b.textContent = "Select & copy"; }
+    );
+  };
+
+  var DEFAULTS = { amount:"10", cur:"€", size:48, ratio:0.52, ls:0.092, gap:1.6, w:700 };
+  $("reset").onclick = function () {
+    Object.keys(DEFAULTS).forEach(function (k) { $(k).value = DEFAULTS[k]; });
+    update();
+  };
+  ["amount","cur","size","ratio","ls","gap","w"].forEach(function (id) { $(id).addEventListener("input", update); });
+  update();
+</script>
+</body>
+</html>

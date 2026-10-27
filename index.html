@@ -1,260 +1,225 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>App Preview v1.0</title>
-    <style>
-      /* --- CLEAN & PROFESSIONAL INITIAL LOOK --- */
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        transition: background 0.1s;
-      }
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#a827f5">
+<title>Početna</title>
+<link rel="stylesheet" href="styles.css">
+<script src="page-transition.js"></script>
+</head>
+<body>
+<main class="page">
+  <div class="col">
 
-      #previewBtn {
-        font-size: 4rem;
-        padding: 40px 80px;
-        background: #ffffff;
-        color: #1e3c72;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        font-weight: bold;
-        position: absolute;
-        transition: all 0.2s ease-out;
-        animation: pulse 2s infinite;
-      }
+    <!-- ============ header ============ -->
+    <header class="header">
+      <button class="glass circle-btn avatar" aria-label="Profil">NN</button>
 
-      #previewBtn span {
-        font-size: 1.5rem;
-        font-weight: normal;
-        display: block;
-        margin-top: 10px;
-        color: #666;
-      }
+      <button class="glass search" aria-label="Pretraživanje" data-i18n-aria="search">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M16.756 14.685c1.852-2.886 1.516-6.769-1.008-9.293-2.912-2.912-7.632-2.912-10.544 0-2.912 2.912-2.912 7.633 0 10.544 2.656 2.656 6.817 2.89 9.738 0.7l3.765 3.766c0.52 0.52 1.363 0.52 1.883 0s0.52-1.363 0-1.883l-3.825-3.825-0.009-0.009zM14.34 6.802c2.133 2.133 2.133 5.592 0 7.725-2.134 2.133-5.592 2.133-7.726 0-2.133-2.133-2.133-5.592 0-7.725 2.134-2.134 5.592-2.134 7.726 0z"/></svg>
+        <span data-i18n="search">Pretraživanje</span>
+      </button>
 
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        50% {
-          transform: scale(1.05);
-          box-shadow: 0 30px 60px rgba(0, 255, 255, 0.4);
-        }
-        100% {
-          transform: scale(1);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-      }
+      <button class="glass circle-btn" aria-label="Analitika" data-i18n-aria="aria.analytics">
+        <svg viewBox="0 0 24 24" fill="#fff"><path fill-rule="evenodd" d="M12 3.071c-1.93 0-2.566 0.638-2.566 2.055v13.748c0 1.417 0.636 2.055 2.566 2.055 1.93 0 2.566-0.638 2.566-2.055V5.126c0-1.417-0.636-2.055-2.566-2.055zm4.618 7.968c0-1.417 0.637-2.056 2.566-2.056 1.93 0 2.566 0.64 2.566 2.056v7.835c0 1.417-0.636 2.055-2.566 2.055-1.93 0-2.566-0.638-2.566-2.055v-7.835zM2.25 16.802c0-1.417 0.636-2.051 2.566-2.051 1.93 0 2.566 0.634 2.566 2.051v2.072c0 1.417-0.637 2.055-2.566 2.055-1.93 0-2.566-0.638-2.566-2.055v-2.072z"/></svg>
+      </button>
 
-      /* --- ANNOYING POST-CLICK ANIMATIONS --- */
-      @keyframes rainbow {
-        0% {
-          background: #ff0000;
-        }
-        20% {
-          background: #ffff00;
-        }
-        40% {
-          background: #00ff00;
-        }
-        60% {
-          background: #00ffff;
-        }
-        80% {
-          background: #ff00ff;
-        }
-        100% {
-          background: #ff0000;
-        }
-      }
+      <button class="glass circle-btn" aria-label="Kartice" data-i18n-aria="aria.cards">
+        <svg viewBox="0 0 24 24" fill="#fff"><path fill-rule="evenodd" d="M2 7.5C2 6.12 3.12 5 4.5 5h15C20.88 5 22 6.12 22 7.5V8H2V7.5zM2 10h20v6.5c0 1.38-1.12 2.5-2.5 2.5h-15C3.12 19 2 17.88 2 16.5V10zm3 5c-0.552 0-1 0.448-1 1s0.448 1 1 1h8c0.552 0 1-0.448 1-1s-0.448-1-1-1H5z"/></svg>
+      </button>
+    </header>
 
-      @keyframes spin {
-        100% {
-          transform: rotate(3600deg) scale(2);
-        }
-      }
+    <!-- ============ balance ============ -->
+    <section class="balance">
+      <div class="label" data-i18n="balance.label">Osobni · EUR</div>
+      <div class="amount"><span class="int">0</span><span class="cur">€</span></div>
+      <div class="iban">
+        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.983c0.19 0 0.379 0.051 0.548 0.154l8.464 4.526c0.305 0.186 0.488 0.502 0.488 0.84v0.528c0 0.337-0.099 0.68-0.488 0.705-0.761 0.047-1.133 0.323-1.133 1.12v6.375c0 0.452 0.347 0.82 0.674 1.167l0.025 0.027 0.012 0.012c0.063 0.068 0.126 0.134 0.183 0.201 0.149 0.17 0.239 0.381 0.239 0.61v1.264c0 0.278-0.244 0.505-0.544 0.505H3.532c-0.3 0-0.544-0.227-0.544-0.505V19.25c0-0.23 0.09-0.441 0.239-0.61 0.057-0.068 0.12-0.134 0.183-0.202l0.012-0.012 0.024-0.026c0.327-0.347 0.675-0.716 0.675-1.168v-6.376c0-0.796-0.372-1.072-1.133-1.119C2.598 9.711 2.5 9.368 2.5 9.031V8.504c0-0.34 0.183-0.655 0.488-0.841l8.464-4.526C11.621 3.034 11.81 2.983 12 2.983zm-4.559 7.066c-0.162 0-0.315 0.035-0.45 0.095-0.326 0.147-0.55 0.447-0.55 0.793v6.187c0 0.49 0.448 0.89 1 0.89H9.81c0.552 0 1-0.4 1-0.89v-6.187c0-0.491-0.448-0.888-1-0.888H7.44zm6.75 0c-0.162 0-0.316 0.034-0.452 0.095-0.325 0.147-0.548 0.447-0.548 0.793v6.187c0 0.49 0.448 0.89 1 0.89h2.368c0.552 0 1-0.4 1-0.89v-6.187c0-0.491-0.448-0.888-1-0.888H14.19z"/></svg>
+        <span>LT31 3250 0074 9233 9748</span>
+      </div>
+    </section>
 
-      @keyframes shake {
-        0% {
-          transform: translate(1px, 1px) rotate(0deg);
-        }
-        10% {
-          transform: translate(-1px, -2px) rotate(-1deg);
-        }
-        20% {
-          transform: translate(-3px, 0px) rotate(1deg);
-        }
-        30% {
-          transform: translate(3px, 2px) rotate(0deg);
-        }
-        40% {
-          transform: translate(1px, -1px) rotate(1deg);
-        }
-        50% {
-          transform: translate(-1px, 2px) rotate(-1deg);
-        }
-        60% {
-          transform: translate(-3px, 1px) rotate(0deg);
-        }
-        70% {
-          transform: translate(3px, 1px) rotate(-1deg);
-        }
-        80% {
-          transform: translate(-1px, -1px) rotate(1deg);
-        }
-        90% {
-          transform: translate(1px, 2px) rotate(0deg);
-        }
-        100% {
-          transform: translate(1px, -2px) rotate(-1deg);
-        }
-      }
+    <div class="pager"><i class="on"></i><i></i><i></i></div>
 
-      .giant-annoying-text {
-        font-size: 8rem;
-        font-weight: 900;
-        color: white;
-        text-align: center;
-        text-shadow: 10px 10px 0px black;
-        animation: shake 0.1s infinite;
-        z-index: 10;
-        pointer-events: none;
-      }
+    <!-- ============ quick actions ============ -->
+    <nav class="actions">
+      <button class="action" id="addMoney">
+        <div class="bubble"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12.192 3c0.605 0 1.095 0.49 1.095 1.096v6.617h6.617c0.605 0 1.096 0.49 1.096 1.095v0.384c0 0.605-0.49 1.095-1.096 1.095h-6.617v6.617c0 0.605-0.49 1.096-1.095 1.096h-0.384c-0.605 0-1.095-0.49-1.095-1.096v-6.617H4.096C3.49 13.287 3 12.797 3 12.192v-0.384c0-0.605 0.49-1.095 1.096-1.095h6.617V4.096C10.713 3.49 11.203 3 11.808 3h0.384z"/></svg></div>
+        <span data-i18n="act.add">Dodaj novac</span>
+      </button>
+      <button class="action">
+        <div class="bubble"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17.825 9.076c0 1.163 0.836 1.583 1.728 0.872l3.009-2.358c0.584-0.469 0.584-1.325 0-1.777l-3.01-2.375c-0.875-0.695-1.727-0.323-1.727 0.888v1.206c-2.281 0.042-3.843 0.905-4.97 2.227-0.941 1.104-1.557 2.521-2.091 3.752v0.002l-0.204 0.464c-0.626 1.42-1.223 2.606-2.159 3.467-0.88 0.81-2.175 1.429-4.401 1.429H3c-0.718 0-1.3 0.582-1.3 1.3 0 0.718 0.582 1.3 1.3 1.3h1c2.774 0 4.73-0.799 6.161-2.116 1.377-1.266 2.155-2.916 2.779-4.331l0.203-0.463V12.56c0.565-1.29 1.018-2.326 1.69-3.114 0.633-0.742 1.479-1.275 2.992-1.313v0.943zM8.416 8.861c0.276 0.247 0.523 0.52 0.75 0.82 0.348-0.765 0.78-1.626 1.324-2.434-0.11-0.111-0.225-0.22-0.344-0.326C8.714 5.643 6.763 4.873 4 4.873H3c-0.718 0-1.3 0.582-1.3 1.3 0 0.718 0.582 1.3 1.3 1.3h1c2.236 0 3.536 0.604 4.416 1.388zm9.409 9.61c-1.922-0.034-3.335-0.636-4.410-1.604 0.548-0.838 0.961-1.677 1.292-2.404 0.037 0.045 0.075 0.09 0.113 0.133 0.628 0.714 1.478 1.238 3.005 1.274v-0.943c0-1.163 0.836-1.583 1.728-0.872l3.009 2.358c0.584 0.469 0.584 1.325 0 1.777l-3.01 2.375c-0.875 0.695-1.727 0.323-1.727-0.888V18.47z"/></svg></div>
+        <span data-i18n="act.move">Prebaci</span>
+      </button>
+      <button class="action">
+        <div class="bubble"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.983c0.19 0 0.379 0.051 0.548 0.154l8.464 4.526c0.305 0.186 0.488 0.502 0.488 0.84v0.528c0 0.337-0.099 0.68-0.488 0.705-0.761 0.047-1.133 0.323-1.133 1.12v6.375c0 0.452 0.347 0.82 0.674 1.167l0.025 0.027 0.012 0.012c0.063 0.068 0.126 0.134 0.183 0.201 0.149 0.17 0.239 0.381 0.239 0.61v1.264c0 0.278-0.244 0.505-0.544 0.505H3.532c-0.3 0-0.544-0.227-0.544-0.505V19.25c0-0.23 0.09-0.441 0.239-0.61 0.057-0.068 0.12-0.134 0.183-0.202l0.012-0.012 0.024-0.026c0.327-0.347 0.675-0.716 0.675-1.168v-6.376c0-0.796-0.372-1.072-1.133-1.119C2.598 9.711 2.5 9.368 2.5 9.031V8.504c0-0.34 0.183-0.655 0.488-0.841l8.464-4.526C11.621 3.034 11.81 2.983 12 2.983zm-4.559 7.066c-0.162 0-0.315 0.035-0.45 0.095-0.326 0.147-0.55 0.447-0.55 0.793v6.187c0 0.49 0.448 0.89 1 0.89H9.81c0.552 0 1-0.4 1-0.89v-6.187c0-0.491-0.448-0.888-1-0.888H7.44zm6.75 0c-0.162 0-0.316 0.034-0.452 0.095-0.325 0.147-0.548 0.447-0.548 0.793v6.187c0 0.49 0.448 0.89 1 0.89h2.368c0.552 0 1-0.4 1-0.89v-6.187c0-0.491-0.448-0.888-1-0.888H14.19z"/></svg></div>
+        <span data-i18n="act.details">Pojedinosti</span>
+      </button>
+      <button class="action">
+        <div class="bubble"><svg viewBox="0 0 25 24" fill="#fff"><path fill-rule="evenodd" d="M5.208 10c1.15 0 2.084 0.895 2.084 2s-0.933 2-2.084 2c-1.15 0-2.083-0.896-2.083-2s0.933-2 2.083-2zm7.292 0c1.15 0 2.083 0.895 2.083 2s-0.932 2-2.083 2c-1.15 0-2.083-0.895-2.083-2s0.932-2 2.083-2zm7.292 0c1.15 0 2.083 0.896 2.083 2s-0.933 2-2.083 2c-1.15 0-2.084-0.895-2.084-2s0.933-2 2.084-2z"/></svg></div>
+        <span data-i18n="act.more">Više</span>
+      </button>
+    </nav>
 
-      .fake-popup {
-        position: absolute;
-        background: #e0e0e0;
-        border: 2px solid #333;
-        border-top: 30px solid #0055ff;
-        padding: 20px;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-        font-family: "Courier New", Courier, monospace;
-        font-weight: bold;
-        color: red;
-        animation: pulse 0.5s infinite;
-        z-index: 5;
-        user-select: none;
-      }
+    <!-- ============ setup card ============ -->
+    <section class="card setup">
+      <div class="top">
+        <div class="ring" id="setupRing" role="img" aria-label="4/5">
+          <svg viewBox="0 0 76 76" fill="none">
+            <circle class="ring-track" cx="38" cy="38" r="34.3" stroke="var(--ring-track)" stroke-width="7" stroke-linecap="round" style="stroke-dasharray:35.92 215.51;transform:rotate(0deg)"/>
+            <circle class="ring-fill" cx="38" cy="38" r="34.3" stroke="var(--ring-blue)" stroke-width="7" stroke-linecap="round" style="stroke-dasharray:143.67 215.51;transform:rotate(120deg)"/>
+          </svg>
+          <b>4/5</b>
+        </div>
+        <div class="text">
+          <h2 data-i18n="setup.title">Dovršite postavljanje</h2>
+          <p data-i18n="setup.desc">Najbolje iskoristite Revolut uz par jednostavnih koraka.</p>
+        </div>
+      </div>
+      <button class="cta" data-i18n="setup.cta">Dovršite postavljanje</button>
+    </section>
 
-      .fake-popup::before {
-        content: "System Error 404";
-        position: absolute;
-        top: -22px;
-        left: 5px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 12px;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="previewBtn">
-      VIEW APP PREVIEW
-      <span>(Click to launch testing environment)</span>
-    </button>
+    <!-- ============ transactions ============ -->
+    <section class="card feed">
+      <div class="tx">
+        <div class="logo aircash">
+          <div class="aircash-mark"><div class="w"><i></i><i></i><i></i></div>aircash<div class="w"><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="body">
+          <div class="name">aircash.eu</div>
+          <div class="when"><span data-i18n="tx.today">Danas</span>, 00:46</div>
+        </div>
+        <div class="amt">−10&nbsp;€</div>
+      </div>
+      <div class="tx">
+        <div class="logo apple">
+          <svg viewBox="0 0 384 512" fill="#fff" style="width:1.55rem;height:2rem;margin-top:-.2rem"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        </div>
+        <div class="body">
+          <div class="name" data-i18n="tx.topup">Novac dodan putem Apple&nbsp;Pay</div>
+          <div class="when"><span data-i18n="tx.today">Danas</span>, 00:44</div>
+        </div>
+        <div class="amt pos">+10&nbsp;€</div>
+      </div>
+      <button class="see-all" data-i18n="feed.all">Prikaži sve</button>
+    </section>
 
-    <script>
-      const btn = document.getElementById("previewBtn");
-      let hoverCount = 0;
+  </div>
+</main>
 
-      // Phase 1: The Runaway Button
-      btn.addEventListener("mouseenter", () => {
-        if (hoverCount < 5) {
-          // Move the button randomly across the screen
-          const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
-          const y =
-            Math.random() * (window.innerHeight - btn.offsetHeight - 20);
+<div class="edge"></div>
 
-          btn.style.left = `${x}px`;
-          btn.style.top = `${y}px`;
+<!-- ============ tab bar ============ -->
+<nav class="tabbar" id="tabbar">
+  <div class="blob" id="blob"></div>
 
-          // Change text to mock him
-          const messages = [
-            "Oops! Too slow!",
-            "Missed me!",
-            "Is your mouse broken?",
-            "Bro, aim better!",
-            "Okay okay, I'll stop. Click me.",
-          ];
-          btn.innerHTML = `${messages[hoverCount]}<br><span>(Seriously, click it)</span>`;
+  <button class="tab active">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.053 7.442H5.7V21h3.353V7.442z"/><path d="M14.61 13.43c2.747-0.138 4.957-2.446 4.957-5.213C19.567 5.341 17.226 3 14.345 3H5.7v2.895h8.234c1.303 0 2.383 1.024 2.406 2.283 0.012 0.63-0.224 1.224-0.665 1.674-0.442 0.45-1.032 0.698-1.661 0.698h-3.208c-0.114 0-0.206 0.092-0.206 0.206v2.573c0 0.044 0.013 0.086 0.039 0.121L16.08 21h3.983l-5.454-7.57z"/></svg>
+    <span data-i18n="tab.home">Početna</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.497 14.813c0-0.552 0.448-1 1-1h0.5c0.553 0 1 0.448 1 1v5.496c0 0.552-0.447 1-1 1h-0.5c-0.552 0-1-0.448-1-1v-5.496zm4.833-2.8c0-0.553 0.448-1 1-1h0.5c0.553 0 1 0.447 1 1v8.296c0 0.553-0.447 1-1 1h-0.5c-0.552 0-1-0.447-1-1v-8.296zm4.834 1.819c0-0.552 0.448-1 1-1h0.5c0.552 0 1 0.448 1 1v6.477c0 0.553-0.448 1-1 1h-0.5c-0.552 0-1-0.447-1-1v-6.477zm4.833-3.489c0-0.552 0.448-1 1-1h0.5c0.553 0 1 0.448 1 1v9.966c0 0.553-0.447 1-1 1h-0.5c-0.552 0-1-0.447-1-1v-9.966zm2.407-7.309c-0.5-0.475-1.292-0.455-1.767 0.046L16.04 5.818c-0.891 0.94-2.38 0.966-3.304 0.06-1.78-1.745-4.596-1.845-6.495-0.23L3.647 7.852C3.12 8.3 3.057 9.088 3.504 9.614c0.447 0.526 1.236 0.59 1.762 0.143L7.86 7.552c0.913-0.777 2.268-0.729 3.125 0.11 1.92 1.885 5.015 1.83 6.867-0.122L20.45 4.8c0.476-0.5 0.455-1.292-0.046-1.767z"/></svg>
+    <span data-i18n="tab.invest">Ulaganje</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.44 5.15h6.385V3.79c0-1.391 1-1.893 2.065-1.043l3.597 2.819c0.698 0.56 0.698 1.583 0 2.124l-3.597 2.838c-1.047 0.83-2.065 0.386-2.065-1.062V8.123H9.44c-0.64 0-1.158-0.519-1.158-1.158V6.309c0-0.64 0.519-1.159 1.158-1.159zm5.428 10.726H8.175v-1.36c0-1.391-0.862-1.893-1.928-1.043l-3.734 2.819c-0.698 0.56-0.698 1.583 0 2.124l3.734 2.838c1.047 0.83 1.928 0.386 1.928-1.062V18.85h6.693c0.64 0 1.158-0.519 1.158-1.158v-0.656c0-0.64-0.519-1.159-1.158-1.159z"/></svg>
+    <span data-i18n="tab.payments">Plaćanja</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.8 2.25c0.74 0 1.341 0.6 1.341 1.341V4.57h1.987V3.59c0-0.74 0.6-1.341 1.342-1.341h0.053c0.74 0 1.341 0.6 1.341 1.341v1.09c1.847 0.378 3.033 1.711 3.033 3.76 0 0.181-0.009 0.354-0.025 0.517-0.02 0.226-0.057 0.435-0.104 0.63-0.225 0.92-0.713 1.504-1.224 1.894v0.084c0.544 0.275 0.997 0.663 1.32 1.208 0.192 0.323 0.339 0.702 0.43 1.145 0.079 0.367 0.12 0.779 0.12 1.24 0 2.414-1.345 3.926-3.55 4.237v1.013c0 0.74-0.6 1.341-1.341 1.341H13.47c-0.741 0-1.342-0.6-1.342-1.341v-0.953h-1.987v0.953c0 0.74-0.6 1.341-1.341 1.341H8.747c-0.74 0-1.341-0.6-1.341-1.341v-0.977H6.208c-0.344 0-0.622-0.299-0.622-0.665v-1.595c0-0.368 0.278-0.665 0.622-0.665h0.846V7.494H6.208c-0.344 0-0.622-0.298-0.622-0.664V5.234c0-0.367 0.278-0.664 0.622-0.664h1.198V3.59c0-0.74 0.6-1.341 1.341-1.341H8.8zm1.98 5.255c-0.158 0-0.301 0.062-0.41 0.166-0.13 0.122-0.212 0.3-0.212 0.498v1.478c0 0.11 0.025 0.216 0.07 0.308 0.043 0.087 0.102 0.162 0.175 0.22 0.105 0.086 0.235 0.137 0.377 0.137h2.482c0.653 0 1.062-0.23 1.278-0.596 0.07-0.12 0.12-0.253 0.152-0.398 0.028-0.129 0.041-0.266 0.041-0.41 0-0.808-0.417-1.403-1.471-1.403H10.78zm0 5.699c-0.144 0-0.275 0.05-0.38 0.137-0.147 0.123-0.242 0.313-0.242 0.527v1.967c0 0.22 0.1 0.415 0.254 0.536 0.103 0.08 0.23 0.128 0.368 0.128h2.68c1.333 0 1.771-0.764 1.771-1.658 0-0.744-0.418-1.637-1.77-1.637H10.78z"/></svg>
+    <span data-i18n="tab.crypto">Kriptovalute</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24"><defs><mask id="rp"><path d="M12 1.5l9.2 5.25v10.5L12 22.5l-9.2-5.25V6.75z" fill="#fff"/><path d="M12 6.6c.5 2.7 1.5 3.7 4.2 4.2-2.7.5-3.7 1.5-4.2 4.2-.5-2.7-1.5-3.7-4.2-4.2 2.7-.5 3.7-1.5 4.2-4.2z" fill="#000"/></mask></defs><rect width="24" height="24" fill="currentColor" mask="url(#rp)"/></svg>
+    <span>RevPoints</span>
+  </button>
+</nav>
 
-          hoverCount++;
-        }
-      });
+<!-- ============ bottom sheets ============ -->
+<div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
 
-      // Phase 2: The Annoying Payload
-      btn.addEventListener("click", () => {
-        // Remove the button
-        btn.style.display = "none";
+<div class="sheet" id="setupSheet" role="dialog" aria-modal="true" aria-labelledby="setupSheetTitle" hidden>
+  <div class="sheet-grabber"></div>
+  <h3 id="setupSheetTitle" data-i18n="setup.title">Dovršite postavljanje</h3>
+  <p data-i18n="setupSheet.text">Želite li zadržati ovu karticu na početnom zaslonu ili je ukloniti?</p>
+  <div class="sheet-progress">
+    <span id="progressLabel" data-i18n="setupSheet.progress">Napredak</span>
+    <div class="stepper" role="group" aria-labelledby="progressLabel">
+      <button type="button" class="step-btn" id="progressDec" data-i18n-aria="progress.dec" aria-label="Smanji napredak"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg></button>
+      <output class="step-value" id="progressValue" aria-live="polite">4/5</output>
+      <button type="button" class="step-btn" id="progressInc" data-i18n-aria="progress.inc" aria-label="Povećaj napredak"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg></button>
+    </div>
+  </div>
+  <div class="sheet-actions">
+    <button class="sheet-btn primary" data-action="keep" data-i18n="common.keep">Zadrži</button>
+    <button class="sheet-btn danger" data-action="remove" data-i18n="common.remove">Ukloni</button>
+  </div>
+</div>
 
-        // Make the background flash rainbow colors
-        document.body.style.animation = "rainbow 0.2s infinite";
+<div class="sheet" id="profileSheet" role="dialog" aria-modal="true" aria-labelledby="profileSheetTitle" hidden>
+  <div class="sheet-grabber"></div>
+  <h3 id="profileSheetTitle" data-i18n="profile.title">Profil</h3>
+  <div class="glass sheet-avatar" id="profilePreview"></div>
+  <div class="sheet-row">
+    <button class="sheet-btn" id="photoUpload">Učitaj fotografiju</button>
+    <button class="sheet-btn danger" id="photoRemove" data-i18n="common.remove" hidden>Ukloni</button>
+  </div>
+  <input type="file" id="photoInput" accept="image/*" hidden>
+  <label class="sheet-field"><span data-i18n="profile.initials">Inicijali (najviše 2 slova)</span>
+    <input type="text" id="initialsInput" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false">
+  </label>
+  <label class="sheet-switch">
+    <span data-i18n="profile.dot">Točkica obavijesti</span>
+    <input type="checkbox" id="dotToggle" role="switch">
+    <i aria-hidden="true"></i>
+  </label>
+  <div class="sheet-lang">
+    <span id="langLabel" data-i18n="profile.language">Jezik</span>
+    <div class="seg" role="radiogroup" aria-labelledby="langLabel">
+      <button type="button" role="radio" data-lang="hr">HR</button>
+      <button type="button" role="radio" data-lang="en">EN</button>
+    </div>
+  </div>
+  <div class="sheet-actions">
+    <button class="sheet-btn primary" id="profileSave" data-i18n="common.save">Spremi</button>
+    <button class="sheet-btn" id="profileCancel" data-i18n="common.cancel">Odustani</button>
+  </div>
+  <button class="sheet-link danger" id="resetOpen" data-i18n="reset.button">Vrati na zadano</button>
+</div>
 
-        // Add the giant shaking text
-        const giantText = document.createElement("div");
-        giantText.className = "giant-annoying-text";
-        giantText.innerHTML =
-          "DOWNLOADING BROWSER HISTORY...<br>SENDING TO MOM... 99%<br><br>GOTCHA BRO 😂";
-        document.body.appendChild(giantText);
+<div class="sheet tx-sheet" id="txSheet" role="dialog" aria-modal="true" aria-labelledby="txSheetTitle" hidden>
+  <div class="sheet-grabber"></div>
+  <h3 id="txSheetTitle" data-i18n="all.title">Transakcije</h3>
+  <div class="tx-list" id="txList"></div>
+</div>
 
-        // Annoying messages to spam the screen
-        const annoyingMessages = [
-          "Deleting System32...",
-          "Error: You are too gullible",
-          "App Feature: Stealing your snacks",
-          "Uploading embarrassing photos...",
-          "Hacking mainframe...",
-          "Downloading RAM...",
-          "Your shoe is untied",
-          "Formatting hard drive...",
-          "Virus.exe successfully installed",
-          "Bro you fell for it!",
-        ];
+<div class="sheet" id="resetSheet" role="dialog" aria-modal="true" aria-labelledby="resetSheetTitle" hidden>
+  <div class="sheet-grabber"></div>
+  <h3 id="resetSheetTitle" data-i18n="reset.title">Vratiti sve na zadano?</h3>
+  <p data-i18n="reset.text">Inicijali, fotografija, točkica, IBAN, kartica postavljanja i jezik vratit će se na početne postavke.</p>
+  <div class="sheet-actions">
+    <button class="sheet-btn danger" id="resetConfirm" data-i18n="reset.confirm">Vrati na zadano</button>
+    <button class="sheet-btn" id="resetCancel" data-i18n="common.cancel">Odustani</button>
+  </div>
+</div>
 
-        // Spam popups across the screen infinitely
-        setInterval(() => {
-          const popup = document.createElement("div");
-          popup.className = "fake-popup";
-          popup.innerText =
-            annoyingMessages[
-              Math.floor(Math.random() * annoyingMessages.length)
-            ];
+<div class="sheet" id="ibanSheet" role="dialog" aria-modal="true" aria-labelledby="ibanSheetTitle" hidden>
+  <div class="sheet-grabber"></div>
+  <h3 id="ibanSheetTitle" data-i18n="iban.title">Uredi IBAN</h3>
+  <label class="sheet-field">IBAN
+    <input type="text" id="ibanInput" maxlength="42" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false">
+  </label>
+  <div class="sheet-hint">
+    <span id="ibanCount">0/34</span>
+  </div>
+  <div class="sheet-actions">
+    <button class="sheet-btn primary" id="ibanSave" data-i18n="common.save">Spremi</button>
+    <button class="sheet-btn" id="ibanCancel" data-i18n="common.cancel">Odustani</button>
+  </div>
+</div>
 
-          // Random position
-          popup.style.left = Math.random() * 80 + "vw";
-          popup.style.top = Math.random() * 80 + "vh";
-
-          // Random rotation
-          popup.style.transform = `rotate(${Math.random() * 360}deg)`;
-
-          document.body.appendChild(popup);
-
-          // Play a tiny beep sound (sometimes browsers block this, but it's funny if it works)
-          try {
-            let ctx = new (window.AudioContext || window.webkitAudioContext)();
-            let osc = ctx.createOscillator();
-            osc.type = "square";
-            osc.frequency.setValueAtTime(
-              400 + Math.random() * 1000,
-              ctx.currentTime,
-            );
-            osc.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.1);
-          } catch (e) {}
-        }, 150); // Spawns a new popup every 150 milliseconds!
-      });
-    </script>
-  </body>
+<script src="bank-store.js"></script>
+<script src="app.js"></script>
+</body>
 </html>

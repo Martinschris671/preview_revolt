@@ -1,0 +1,307 @@
+/* ------------------------------------------------------------------
+   Add money (Dodaj novac) — keypad screen + Apple Pay sheet.
+   Every size is measured from the 739x1600 screenshots: px / 18.95 = rem
+   (1rem = 10pt on a 390pt-wide phone; scales down on narrower phones).
+   Layout is a flex column: header at the top, keypad block pinned to the
+   bottom, amount + method pill centred in the space between.
+------------------------------------------------------------------ */
+@font-face { font-family:"Inter"; src:url("_build/fonts/inter-var.ttf") format("truetype"); font-weight:100 900; font-display:block; }
+
+:root{
+  /* on an iPhone these equal the safe areas the screenshot was taken with (47pt / 34pt) */
+  --top: max(env(safe-area-inset-top, 0px), 1.2rem);
+  --bottom: max(env(safe-area-inset-bottom, 0px), 1.2rem);
+  --grey: #98989a;
+  --caret: #6f9df1;
+
+  /* liquid-glass rim, sampled around the back button every 30° (0° = top, clockwise) */
+  --rim: conic-gradient(from 0deg,
+    #4a4a4a 0deg, #303030 30deg, #2a2a2a 60deg, #474747 90deg,
+    #5d5d5d 120deg, #626262 150deg, #4d4d4d 180deg, #282828 210deg,
+    #333333 240deg, #505050 270deg, #505050 300deg, #5b5b5b 330deg, #4a4a4a 360deg);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html{
+  font-size:min(10px, calc(100vw / 39));
+  -webkit-text-size-adjust:100%; text-size-adjust:100%;
+  background:#000;
+}
+body{
+  background:#000; color:#fff;
+  font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings:"cv11" 0;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow:hidden;
+  -webkit-user-select:none; user-select:none;
+}
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+svg{ display:block; flex:none; }
+
+/* ========================= LIQUID GLASS ========================= */
+.glass{
+  position:relative;
+  background:#131313;
+  -webkit-backdrop-filter:blur(1.2rem) saturate(1.4);
+  backdrop-filter:blur(1.2rem) saturate(1.4);
+  transition:transform .22s cubic-bezier(.3,1.4,.5,1), background-color .15s ease;
+}
+.glass::before{ /* specular rim, brightest top-left and bottom-right */
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  padding:.08rem;
+  background:var(--rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events:none;
+}
+.glass:active{ transform:scale(.94); background-color:#1f1f1f; }
+
+/* ============================ SCREEN ============================ */
+.screen{
+  position:relative;
+  display:flex; flex-direction:column;
+  width:100%; max-width:48rem; margin:0 auto;
+  height:100vh; height:100dvh;
+  padding-top:var(--top);
+  padding-bottom:var(--bottom);
+}
+
+/* ============================ HEADER ============================ */
+.hdr{
+  position:relative; flex:none;
+  height:4.43rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .35s ease;
+}
+.back{
+  position:absolute; left:1.58rem; top:0;
+  width:4.43rem; height:4.43rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.back svg{ width:2.39rem; height:2.39rem; margin-left:.36rem; } /* centre the arrow glyph, not its box */
+.titles{ text-align:center; }
+.title{ font-size:1.682rem; font-weight:720; line-height:1; letter-spacing:0; transform:translateY(.05rem); }
+.saldo{ margin-top:.404rem; font-size:1.478rem; font-weight:500; line-height:1; letter-spacing:.006em; color:var(--grey); transform:translateY(.05rem); }
+
+/* ======================= AMOUNT + METHOD PILL ======================= */
+.mid{
+  flex:1; min-height:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding-top:1.94rem;
+  transition:transform .45s cubic-bezier(.3,.9,.3,1), opacity .35s ease;
+}
+.amount{
+  /* the box keeps its height; the text inside scales down when a long amount would not fit
+     (app.js sets --amt-size). All inner sizes are in em so they scale together. */
+  height:4.57rem;
+  display:flex; align-items:center; justify-content:center;
+  font-size:var(--amt-size, 4.57rem); font-weight:780; line-height:1; letter-spacing:-.012em;
+  white-space:nowrap;
+  transition:font-size .16s ease;
+}
+.amount .val{ display:block; transform:translateY(.011em); }
+.amount .caret{
+  position:relative; width:.035em; height:1.2123em; margin:0 .0044em 0 .0438em;
+  background:var(--caret); border-radius:.0175em;
+  animation:blink 1.06s steps(1) infinite;
+}
+.amount .cur{ display:block; margin-left:.1707em; transform:translateY(.011em); }
+@keyframes blink{ 0%,49.9%{ opacity:1; } 50%,100%{ opacity:0; } }
+.amount.shake{ animation:amt-shake .32s cubic-bezier(.36,.07,.19,.97); } /* hit the 99 999,00 limit */
+@keyframes amt-shake{
+  0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-.8rem); } 40%{ transform:translateX(.7rem); }
+  60%{ transform:translateX(-.45rem); } 80%{ transform:translateX(.25rem); }
+}
+
+.method{
+  margin-top:1.91rem;
+  height:3.96rem; border-radius:999px;
+  display:flex; align-items:center;
+  padding:0 1.53rem 0 .855rem;
+  background:#191919;
+  font-size:1.52rem; font-weight:650; letter-spacing:-.008em; line-height:1;
+  white-space:nowrap;
+  transition:background-color .15s;
+}
+.method:active{ background:#232323; }
+.method .badge{ width:2.42rem; height:2.42rem; margin-left:-.01rem; }
+.method .label{ margin-left:.79rem; transform:translateY(.1rem); }
+.method .chev{ width:.84rem; height:.47rem; margin-left:.9rem; transform:translateY(.05rem); }
+
+/* ========================= BOTTOM BLOCK ========================= */
+.bottom{ flex:none; transition:opacity .3s ease; }
+.status-line{
+  position:relative; top:.1rem;
+  text-align:center;
+  font-size:1.493rem; font-weight:500; line-height:1; color:var(--grey);
+}
+.status-line b{ font-weight:500; color:#fff; }
+
+.pay-btn{
+  display:flex; align-items:center; justify-content:center;
+  width:calc(100% - 3.28rem); margin:1.825rem 1.64rem 0;
+  height:4.749rem; border-radius:999px;
+  background:#fff; color:#221f20;
+  transition:transform .15s, opacity .15s;
+}
+.pay-btn:active{ transform:scale(.985); opacity:.92; }
+.pay-btn:disabled{ opacity:.35; cursor:default; transform:none; } /* nothing to pay at 0 */
+.pay-btn .apple{ width:1.53rem; height:1.9rem; transform:translateY(-.26rem); }
+.pay-btn .pay{ margin-left:.44rem; font-size:2.395rem; font-weight:500; letter-spacing:-.01em; line-height:1; transform:translateY(-.1rem); }
+
+.ops{
+  margin-top:2.481rem;
+  padding:0 1.055rem 0 1rem;
+  display:grid; grid-template-columns:repeat(5, 1fr); gap:1.055rem;
+}
+.op{
+  height:4.75rem; border-radius:999px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.216rem; font-weight:700; line-height:1;
+  background:#121212;
+}
+.op span{ display:block; transform:translateY(-.05rem); }
+
+.keys{
+  margin-top:1.054rem;
+  padding:0 1.41rem;
+  display:grid; grid-template-columns:repeat(3, 1fr); grid-auto-rows:6.007rem;
+}
+.key{
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.78rem; font-weight:680; line-height:1;
+  transition:opacity .1s;
+}
+.key:active{ opacity:.4; }
+.key:nth-child(3n+1){ transform:translateX(.08rem); }
+.key:nth-child(3n){ transform:translateX(-.16rem); }
+.key{ padding-top:.1rem; }
+.key svg{ width:2.005rem; height:1.636rem; margin-top:-.1rem; }
+
+/* ===================== APPLE PAY SHEET (image 8) ===================== */
+body.paying .hdr{ opacity:.51; }
+body.paying .mid{ opacity:.51; }
+body.paying.pay-tight .mid{ opacity:0; } /* short screens: no room beside the side-button hint */
+body.paying .bottom{ opacity:0; pointer-events:none; }
+body.paying .caret{ visibility:hidden; }
+body.paying .method{ background:#191919; }
+
+.pay-layer{
+  position:fixed; inset:0; z-index:30;
+  visibility:hidden; pointer-events:none;
+}
+.pay-layer.open{ visibility:visible; pointer-events:auto; }
+.side-bar{
+  position:absolute; top:24.38rem; right:.79rem;
+  width:.42rem; height:10.5rem; border-radius:999px; background:#fff;
+  opacity:0; transition:opacity .3s ease;
+}
+.side-hint{
+  position:absolute; top:27.15rem; right:2.1rem;
+  text-align:right; white-space:nowrap;
+  font-size:2rem; font-weight:700; line-height:1.22; letter-spacing:-.012em;
+  opacity:0; transition:opacity .3s ease;
+}
+.pay-layer.open .side-bar, .pay-layer.open .side-hint{ opacity:1; }
+
+.pay-sheet{
+  position:absolute; left:.63rem; right:.63rem; bottom:.63rem;
+  max-width:46.74rem; margin:0 auto;
+  border-radius:3.56rem 3.56rem 4.5rem 4.5rem;
+  /* lighter lower area behind the side-button prompt (stops measured from the bottom edge) */
+  background:linear-gradient(to top, #1c1c1c 0, #1d1d1d 3.54rem, #2a2a2a 4.59rem, #2b2b2b 7.34rem, #121212 9.24rem, #111 100%);
+  padding:1.74rem 1.58rem 1.9rem;
+  transform:translateY(calc(100% + 2rem));
+  transition:transform .45s cubic-bezier(.3,.9,.3,1);
+}
+.pay-sheet::before{ /* glass rim: brightest at the bottom */
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:.08rem;
+  background:linear-gradient(180deg, #4a4a4a, #3a3a3a 40%, #3a3a3a 70%, #6a6a6a);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events:none;
+}
+.pay-layer.open .pay-sheet{ transform:translateY(0); }
+
+.ps-head{ display:flex; align-items:center; justify-content:space-between; height:4.22rem; }
+.ps-logo{ display:flex; align-items:flex-end; margin-left:.53rem; transform:translateY(-.32rem); }
+.ps-logo .apple{ width:1.74rem; height:2.1rem; margin-bottom:.03rem; }
+.ps-logo .pay{ margin-left:.37rem; font-size:2.6rem; font-weight:500; line-height:.76; letter-spacing:-.03em; }
+.ps-close{
+  width:4.22rem; height:4.22rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#222224;
+}
+.ps-close svg{ width:2.8rem; height:2.8rem; }
+
+.ps-card{
+  margin-top:1rem; height:7.07rem; border-radius:2.4rem;
+  display:flex; align-items:center; padding:0 1.53rem 0 1.69rem;
+  background:#2d2d2d;
+}
+.ps-thumb{
+  position:relative; flex:none; overflow:hidden;
+  width:3.48rem; height:2.2rem; border-radius:.32rem;
+}
+.ps-thumb img{ display:block; width:100%; height:100%; object-fit:cover; }
+.ps-thumb-num{ position:absolute; inset:0; width:100%; height:100%; } /* card number, bottom-left of the card */
+.ps-thumb-num text{ font-family:"Inter", sans-serif; font-size:50px; font-weight:600; letter-spacing:2px; fill:#fff; fill-opacity:.92; }
+.ps-card-name{ margin-left:1.59rem; font-size:1.85rem; font-weight:600; letter-spacing:-.02em; line-height:1; }
+.ps-card-num{ margin-left:auto; display:flex; align-items:center; font-size:1.83rem; font-weight:600; letter-spacing:-.01em; line-height:1; }
+.ps-card-num .dots{ display:flex; gap:.41rem; margin-right:.62rem; }
+.ps-card-num .dots i{ display:block; width:.46rem; height:.46rem; border-radius:50%; background:#fff; }
+
+.ps-change{
+  margin-top:.84rem; width:100%; height:5.22rem; border-radius:999px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 1.53rem;
+  background:#313131;
+  font-size:1.85rem; font-weight:600; letter-spacing:-.02em; line-height:1;
+}
+.ps-change .chev{ width:1rem; height:1.6rem; }
+
+.ps-pay{ position:relative; margin-top:1.81rem; padding-left:.37rem; }
+.ps-pay-label{ margin-left:.32rem; font-size:1.446rem; font-weight:500; line-height:1; letter-spacing:.011em; color:#8e8e93; }
+.ps-pay-amount{ margin-top:.62rem; margin-left:.38rem; font-size:2.9rem; font-weight:760; line-height:1; letter-spacing:-.01em; }
+.ps-info{
+  position:absolute; right:1.01rem; top:50%; transform:translateY(-50%);
+  width:2.69rem; height:2.69rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#363638;
+}
+.ps-info svg{ width:.74rem; height:1.53rem; }
+
+.ps-confirm{ position:relative; margin-top:1.98rem; text-align:center; }
+.ps-confirm::before{ /* soft dark halo around the side-button glyph */
+  content:""; position:absolute; left:50%; top:-.9rem; width:5.4rem; height:5.4rem; margin-left:-2.7rem;
+  background:radial-gradient(circle, rgba(0,0,0,.42) 0, rgba(0,0,0,.3) 45%, rgba(0,0,0,0) 72%);
+  pointer-events:none;
+}
+.ps-confirm .side-ico{ position:relative; width:3.42rem; height:3.42rem; margin:0 auto; }
+.ps-confirm .side-ico{ cursor:pointer; border-radius:50%; }
+.ps-confirm .side-ico svg{ display:block; width:100%; height:100%; overflow:visible; }
+.ps-confirm .side-ico:focus-visible{ outline:.2rem solid rgba(10,132,255,.6); outline-offset:.3rem; }
+/* success (after a tap): phone fades + shrinks, ring turns green, checkmark draws in */
+.side-ico .sg-ring{ transition:stroke .2s ease; }
+.side-ico .sg-phone{ transform-origin:17.5px 17.5px; transition:opacity .15s ease, transform .2s cubic-bezier(.4,0,.2,1); }
+.side-ico .sg-check{
+  fill:none; stroke:#30D158; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:1 2; stroke-dashoffset:1.05;
+  transition:stroke-dashoffset .22s cubic-bezier(.3,0,.2,1) .1s;
+}
+.side-ico.is-done .sg-ring{ stroke:#30D158; }
+.side-ico.is-done .sg-phone{ opacity:0; transform:scale(.75); }
+.side-ico.is-done .sg-check{ stroke-dashoffset:0; }
+@media (prefers-reduced-motion: reduce){
+  .side-ico .sg-ring, .side-ico .sg-phone, .side-ico .sg-check{ transition-duration:.01s; transition-delay:0s; }
+}
+.ps-confirm .side-text{
+  position:relative; margin-top:.63rem;
+  font-size:1.64rem; font-weight:600; letter-spacing:-.01em; line-height:1; color:#e6e6e6;
+}
+
+/* no visible scrollbars (pages and sheets still scroll by touch, wheel and keyboard) */
+*{ scrollbar-width:none; -ms-overflow-style:none; }
+*::-webkit-scrollbar{ display:none; width:0; height:0; }

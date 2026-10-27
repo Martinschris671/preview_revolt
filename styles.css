@@ -1,0 +1,501 @@
+/* ------------------------------------------------------------------
+   Home screen — responsive replica.
+   Units: 1rem = 10pt of the 390pt-wide reference (screenshot ÷ 1.895).
+   On phones narrower than 390 the whole UI scales down proportionally;
+   on wider screens sizes stay fixed and the layout stretches
+   (column capped at 480pt).
+------------------------------------------------------------------ */
+@font-face { font-family:"Inter";  src:url("_build/fonts/inter-var.ttf") format("truetype"); font-weight:100 900; font-display:block; }
+
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --header-top: calc(var(--safe-top) + 1.2rem);
+
+  --white-75: rgba(255,255,255,.75);
+  --card: rgba(255,255,255,.07);
+  --positive: #2fc7a1;
+  --ring-blue: #7ba3fc;
+  --ring-track: #766eae;
+
+  /* liquid-glass rim, sampled around the avatar every 30° (0° = top, clockwise) */
+  --rim: conic-gradient(from 0deg,
+    #be35ff 0deg, #aa31fa 30deg, #aa2eff 60deg, #c935ff 90deg,
+    #d939ff 120deg, #cf3aff 150deg, #b93eff 180deg, #ac2ffd 210deg,
+    #ac31fb 240deg, #c934ff 270deg, #ce30ff 300deg, #da33ff 330deg, #be35ff 360deg);
+}
+
+html{
+  font-size: min(10px, calc(100vw / 39));
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  background:#302e7c;
+}
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+body{
+  min-height:100vh; min-height:100dvh;
+  color:#fff;
+  font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings:"cv11" 0;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background:#302e7c;
+  overflow-x:hidden;
+}
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+svg{ display:block; flex:none; }
+
+/* ===================== BACKGROUND GRADIENT =====================
+   Sampled every 21.11pt down the screenshot; anchored so the header
+   sits on the same colour as in the reference. Scrolls with content. */
+.page{ position:relative; isolation:isolate; min-height:100vh; min-height:100dvh; padding-top:var(--header-top); padding-bottom:calc(var(--safe-bottom) + 12rem); }
+.page::before{
+  content:""; position:absolute; left:0; right:0;
+  top:calc(var(--header-top) - 4.67rem); height:84.45rem;
+  z-index:-1;
+  background:linear-gradient(180deg,
+    #a827f5 0rem,     #a32df5 2.111rem,  #a032f3 4.222rem,  #9a37f4 6.334rem,
+    #963bf2 8.445rem, #9041f4 10.556rem, #8a45f4 12.667rem, #8449f3 14.778rem,
+    #7d4cf3 16.89rem, #794ef3 19.001rem, #764ff3 21.112rem, #7251f2 23.223rem,
+    #6e51f1 25.334rem,#6c51f2 27.446rem, #6a50f1 29.557rem, #674ff0 31.668rem,
+    #644eef 33.779rem,#5f4eeb 35.89rem,  #594ee2 38.002rem, #504ad2 40.113rem,
+    #4541b4 42.224rem,#3e399f 44.335rem, #39338d 46.446rem, #372f85 48.558rem,
+    #342b7c 50.669rem,#342b7e 52.78rem,  #342b7e 54.891rem, #362a7c 57.002rem,
+    #362a7c 59.114rem,#332a7d 61.225rem, #332a7d 63.336rem, #332c7c 65.447rem,
+    #322a7d 67.558rem,#322a7d 69.67rem,  #322c7e 71.781rem, #2f2c7d 73.892rem,
+    #302c7d 76.003rem,#302d7c 78.114rem, #302d7c 80.226rem, #302d7c 82.337rem,
+    #302e7c 84.45rem);
+}
+.page::after{ /* top cap so overscroll above the header stays magenta */
+  content:""; position:absolute; left:0; right:0; z-index:-1;
+  top:-100vh; height:calc(100vh + var(--header-top) - 4.67rem);
+  background:#a827f5;
+}
+.col{ max-width:48rem; margin:0 auto; }
+
+/* ========================= LIQUID GLASS ========================= */
+.glass{
+  position:relative;
+  border-radius:999px;
+  background:rgba(255,255,255,.012);
+  -webkit-backdrop-filter:saturate(1.1) blur(.6rem);
+  backdrop-filter:saturate(1.1) blur(.6rem);
+  transition:transform .25s cubic-bezier(.3,1.5,.5,1);
+}
+.glass::before{ /* specular rim */
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  padding:.11rem;
+  background:var(--rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events:none;
+}
+.glass::after{ /* faint inner sheen */
+  content:""; position:absolute; inset:.11rem; border-radius:inherit;
+  background:radial-gradient(120% 90% at 30% 0%, rgba(255,255,255,.05), transparent 60%);
+  pointer-events:none;
+}
+.glass:active{ transform:scale(.94); }
+
+/* ============================ HEADER ============================ */
+.header{
+  display:flex; align-items:center;
+  height:4.44rem;
+  padding:0 1.61rem 0 1.95rem;
+}
+.circle-btn{
+  width:4.42rem; height:4.42rem; flex:none;
+  display:flex; align-items:center; justify-content:center;
+}
+.avatar{ font-size:1.38rem; font-weight:500; letter-spacing:.01rem; line-height:1; }
+.search{
+  flex:1; min-width:0;
+  height:4.44rem;
+  margin:0 1.17rem 0 1.56rem;
+  display:flex; align-items:center;
+  padding-left:1.01rem;
+}
+.search svg{ width:2.46rem; height:2.46rem; }
+.search span{
+  margin-left:.74rem;
+  font-size:1.515rem; font-weight:500; line-height:1;
+  color:rgba(255,255,255,.97);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.circle-btn + .circle-btn{ margin-left:1.11rem; }
+.circle-btn svg{ width:2.4rem; height:2.4rem; }
+
+/* ============================ BALANCE =========================== */
+.balance{ margin-top:9.42rem; text-align:center; }
+.balance .label{
+  font-size:1.504rem; font-weight:500; line-height:1;
+  color:rgba(255,255,255,.95);
+}
+.amount{
+  /* the balance keeps a 4.8rem box; app.js sets --bal-size so long balances shrink to fit the
+     screen width, and the padding keeps the smaller text centred in the same box */
+  margin-top:.55rem; height:4.8rem;
+  padding-top:calc((4.8rem - var(--bal-size, 4.8rem)) / 2);
+  display:flex; justify-content:center; align-items:baseline;
+  font-family:"Inter", sans-serif; font-weight:700; line-height:1;
+  font-size:var(--bal-size, 4.8rem);
+  position:relative; top:.1rem;
+  white-space:nowrap;
+  transition:font-size .2s ease, padding-top .2s ease;
+}
+.amount .int{ font-size:1em; letter-spacing:.092em; }
+.amount .cur{ font-size:.4792em; margin-left:-.0174em; }   /* 2.3rem and -.04rem at full size */
+.iban{
+  margin-top:.72rem;
+  display:flex; justify-content:center; align-items:center; gap:.9rem;
+  height:1.5rem;
+}
+.iban svg{ width:1.6rem; height:1.6rem; }
+.iban span{
+  font-size:1.504rem; font-weight:500; line-height:1; letter-spacing:.008rem;
+  color:rgba(255,255,255,.93); white-space:nowrap;
+}
+
+/* ========================== PAGE DOTS =========================== */
+.pager{
+  margin:5.73rem auto 0;
+  width:8.18rem; height:3.9rem; border-radius:999px;
+  background:rgba(165,150,255,.46);
+  display:flex; align-items:center; justify-content:center; gap:.34rem;
+}
+.pager i{ display:block; width:.475rem; height:.475rem; border-radius:50%; background:rgba(255,255,255,.45); }
+.pager i.on{ width:.63rem; height:.63rem; background:#fff; }
+
+/* ======================== QUICK ACTIONS ========================= */
+.actions{
+  margin-top:2.93rem;
+  padding:0 1.6rem;
+  display:grid; grid-template-columns:repeat(4, 1fr);
+}
+.action{ display:flex; flex-direction:column; align-items:center; }
+.action .bubble{
+  width:4.8rem; height:4.8rem; border-radius:50%;
+  background:rgba(210,212,255,.245);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .25s cubic-bezier(.3,1.5,.5,1), background .2s;
+}
+.action:active .bubble{ transform:scale(.92); background:rgba(210,212,255,.32); }
+.action .bubble svg{ width:2.4rem; height:2.4rem; }
+.action span{
+  margin-top:.91rem;
+  font-size:1.472rem; font-weight:600; line-height:1; white-space:nowrap;
+}
+
+/* ============================ CARDS ============================= */
+.card{
+  margin:0 1.58rem;
+  background:var(--card);
+  border-radius:2.35rem;
+}
+
+.setup{ margin-top:1.68rem; padding:1.583rem 1.583rem 1.64rem; }
+.setup .top{ display:flex; align-items:flex-start; }
+.ring{ position:relative; width:4rem; height:4rem; flex:none; }
+.ring svg{ width:100%; height:100%; }
+.ring b{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.37rem; font-weight:700; line-height:1; letter-spacing:-.02rem;
+  padding-top:.3rem;
+}
+.setup .text{ margin-left:1.624rem; padding-top:.185rem; min-width:0; }
+.setup h2{ font-size:1.731rem; font-weight:700; line-height:1; letter-spacing:-.01em; }
+.setup p{
+  margin-top:.272rem;
+  font-size:1.515rem; font-weight:400; line-height:1.794rem;
+  color:var(--white-75);
+}
+.cta{
+  display:block; width:100%;
+  margin-top:1.66rem; height:3.96rem; border-radius:999px;
+  background:#fff; color:#0a0a0f;
+  font-size:1.515rem; font-weight:700; letter-spacing:-.01em; line-height:1;
+  transition:transform .2s;
+}
+.cta:active{ transform:scale(.97); }
+
+.feed{ margin-top:1.58rem; padding:1.636rem 1.64rem 1.4rem; }
+.tx{ display:flex; align-items:flex-start; position:relative; }
+.tx + .tx{ margin-top:3.217rem; }
+.tx .logo{
+  width:3.96rem; height:3.96rem; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.tx .body{ flex:1; min-width:0; margin-left:1.586rem; padding-top:.12rem; }
+/* titles may wrap to two lines ("Novac dodan putem / Apple Pay"); the negative margin cancels the
+   extra line-height so single-line rows sit exactly where they did */
+.tx .name{
+  margin-top:-.156rem;
+  font-size:1.731rem; font-weight:600; line-height:1.18;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.tx .when{ margin-top:.264rem; font-size:1.515rem; line-height:1; color:var(--white-75); }
+.tx .amt{
+  padding-top:.12rem; margin-left:1rem;
+  font-size:1.731rem; font-weight:500; line-height:1; letter-spacing:.03rem; white-space:nowrap;
+}
+.tx .amt.pos{ color:var(--positive); }
+.logo.aircash{ background:#e10231; }
+.aircash-mark{ display:flex; align-items:center; gap:.13rem; font-size:.69rem; font-weight:700; letter-spacing:-.016rem; }
+.aircash-mark .w{ display:flex; flex-direction:column; gap:.085rem; }
+.aircash-mark .w i{ display:block; width:.34rem; height:.09rem; background:#fff; border-radius:.05rem; }
+.logo.apple{ background:#0d0c14; }
+.logo.apple svg{ width:2.4rem; height:2.4rem; }
+/* circled-plus badge on additions (positive transactions) */
+.tx .badge{
+  position:absolute; left:2.705rem; top:2.705rem;
+  width:1.55rem; height:1.55rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; box-shadow:0 0 0 .16rem #413986;
+}
+.tx .badge svg{ width:100%; height:100%; }
+.see-all{
+  display:block; width:100%; margin-top:3.9rem; padding:.6rem 0;
+  font-size:1.515rem; font-weight:600; line-height:1; text-align:center;
+}
+
+/* ===================== SCROLL-EDGE BLUR ======================= */
+.edge{
+  position:fixed; left:0; right:0; bottom:0; z-index:9;
+  height:calc(max(2rem, var(--safe-bottom) - 1.4rem) + 6.23rem + 2.6rem);
+  background:linear-gradient(to bottom, transparent, rgba(36,32,100,.22));
+  -webkit-backdrop-filter:blur(.15rem);
+  backdrop-filter:blur(.15rem);
+  -webkit-mask:linear-gradient(to bottom, transparent, #000 3.2rem);
+  mask:linear-gradient(to bottom, transparent, #000 3.2rem);
+  pointer-events:none;
+}
+
+/* ========================== TAB BAR ============================ */
+.tabbar{
+  position:fixed; z-index:10;
+  left:50%; transform:translateX(-50%);
+  bottom:max(2rem, calc(var(--safe-bottom) - 1.4rem));
+  width:min(calc(100% - 3.16rem), 44.84rem);
+  height:6.23rem; border-radius:999px;
+  padding:0 .94rem;
+  display:flex;
+  background:rgba(14,12,40,.56);
+  -webkit-backdrop-filter:blur(1.2rem) saturate(1.25);
+  backdrop-filter:blur(1.2rem) saturate(1.25);
+}
+.tabbar::before{ /* glass rim */
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:.1rem;
+  background:linear-gradient(180deg, rgba(120,110,255,.5), rgba(95,85,235,.34) 30%, rgba(95,85,235,.34) 70%, rgba(120,110,255,.46));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events:none;
+}
+.tabbar .blob{
+  position:absolute; top:.58rem; height:5.07rem; width:7.8rem; border-radius:999px;
+  left:0;
+  background:rgba(255,255,255,.075);
+  box-shadow:inset 0 .05rem .1rem rgba(255,255,255,.06);
+  transition:transform .45s cubic-bezier(.3,1.35,.45,1);
+  pointer-events:none;
+}
+.tab{
+  position:relative; flex:1; min-width:0;
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:1.18rem;
+  color:rgba(255,255,255,.78);
+}
+.tab svg{ width:2.4rem; height:2.4rem; }
+.tab span{
+  margin-top:.47rem;
+  font-size:.908rem; font-weight:500; line-height:1; white-space:nowrap;
+  color:rgba(255,255,255,.85);
+}
+.tab.active, .tab.active span{ color:#fff; }
+
+/* ======================= AVATAR PHOTO ========================= */
+.avatar-img{
+  position:absolute; top:.11rem; left:.11rem;
+  width:calc(100% - .22rem); height:calc(100% - .22rem);
+  border-radius:50%; object-fit:cover;
+  pointer-events:none;
+}
+
+/* ======================== BOTTOM SHEETS ======================== */
+.sheet-backdrop{
+  position:fixed; inset:0; z-index:20;
+  background:rgba(8,6,24,.45);
+  opacity:0; transition:opacity .32s ease;
+}
+.sheet-backdrop.open{ opacity:1; }
+.sheet{
+  position:fixed; z-index:21; left:50%; bottom:0;
+  width:min(100%, 48rem);
+  max-height:calc(100% - var(--safe-top) - 2rem); overflow-y:auto;
+  transform:translate(-50%, 100%);
+  transition:transform .38s cubic-bezier(.2,.9,.3,1);
+  padding:.8rem 1.6rem calc(var(--safe-bottom) + 2.4rem);
+  border-radius:2.8rem 2.8rem 0 0;
+  background:rgba(36,31,88,.94);
+  -webkit-backdrop-filter:blur(2rem) saturate(1.3);
+  backdrop-filter:blur(2rem) saturate(1.3);
+  box-shadow:0 -1rem 4rem rgba(0,0,0,.3), inset 0 .1rem 0 rgba(255,255,255,.12);
+  text-align:center;
+}
+.sheet.open{ transform:translate(-50%, 0); }
+.sheet-grabber{ width:3.6rem; height:.5rem; border-radius:999px; background:rgba(255,255,255,.3); margin:0 auto 1.6rem; }
+.sheet h3{ font-size:1.9rem; font-weight:700; line-height:1.2; }
+.sheet p{ margin-top:.6rem; font-size:1.5rem; line-height:1.35; color:var(--white-75); }
+.sheet-actions{ margin-top:2.2rem; display:flex; flex-direction:column; gap:1rem; }
+.sheet-row{ margin-top:1.6rem; display:flex; gap:1rem; }
+.sheet-row .sheet-btn{ flex:1; }
+.sheet-btn{
+  height:4.8rem; border-radius:999px;
+  font-size:1.6rem; font-weight:600;
+  background:rgba(255,255,255,.12); color:#fff;
+  transition:transform .2s, opacity .2s;
+}
+.sheet-btn:active{ transform:scale(.97); }
+.sheet-btn.primary{ background:#fff; color:#0a0a0f; }
+.sheet-btn.danger{ color:#ff6b78; }
+.sheet-btn:disabled{ opacity:.4; pointer-events:none; }
+.sheet-avatar{
+  width:8.8rem; height:8.8rem; margin:1.8rem auto 0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:3rem; font-weight:500; line-height:1;
+}
+.sheet-field{
+  display:block; margin-top:2rem; text-align:left;
+  font-size:1.3rem; color:rgba(255,255,255,.6);
+}
+.sheet-field input{
+  display:block; width:100%; margin-top:.6rem; height:4.8rem;
+  border-radius:1.4rem; border:.1rem solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08); color:#fff; outline:none;
+  font:inherit; font-size:max(16px, 1.8rem); font-weight:600;
+  text-align:center; letter-spacing:.2rem; text-transform:uppercase;
+}
+.sheet-field input:focus{ border-color:rgba(255,255,255,.4); }
+
+/* setup card removal */
+.setup.removing{
+  height:0 !important; padding-top:0; padding-bottom:0; margin-top:.1rem; /* + feed's 1.58rem = the 1.68rem actions gap */
+  opacity:0; transform:scale(.96);
+  transition:height .35s ease, padding .35s ease, margin .35s ease, opacity .25s ease, transform .35s ease;
+}
+
+/* setup card removed: transactions take its place with the same gap below the actions */
+.actions + .feed{ margin-top:1.68rem; }
+
+/* ===================== AVATAR NOTIFICATION DOT ===================== */
+/* sized and placed relative to the avatar, so it fits the header and the sheet preview */
+.avatar-dot{
+  position:absolute; left:85%; top:5%;
+  width:18.4%; height:18.4%; border-radius:50%;
+  background:#f4403a;
+  pointer-events:none;
+}
+.sheet-switch{
+  margin-top:1.6rem; padding:0 1.6rem; height:5.2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  border-radius:1.4rem; background:rgba(255,255,255,.08);
+  font-size:1.6rem; font-weight:500; text-align:left; cursor:pointer;
+}
+.sheet-switch input{ position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
+/* iOS 26 switch: 63x28pt track, 37x24pt white capsule knob, 2pt inset */
+.sheet-switch i{
+  position:relative; flex:none;
+  width:6.3rem; height:2.8rem; border-radius:1.4rem;
+  background:rgba(120,120,128,.32);
+  transition:background-color .25s ease;
+}
+.sheet-switch i::after{
+  content:""; position:absolute; top:.2rem; left:.2rem;
+  width:3.7rem; height:2.4rem; border-radius:1.2rem;
+  background:#fff;
+  box-shadow:0 .1rem .4rem rgba(0,0,0,.16), 0 .05rem .1rem rgba(0,0,0,.06);
+  transition:transform .25s ease;
+}
+.sheet-switch input:checked + i{ background:#30d158; }
+.sheet-switch input:checked + i::after{ transform:translateX(2.2rem); }
+.sheet-switch input:focus-visible + i{ outline:.2rem solid rgba(255,255,255,.6); outline-offset:.2rem; }
+
+/* ========================= EDITABLE IBAN ========================= */
+.iban{ cursor:pointer; -webkit-user-select:none; user-select:none; transition:opacity .15s; }
+.iban:active{ opacity:.6; }
+.iban:focus-visible{ outline:.2rem solid rgba(255,255,255,.6); outline-offset:.4rem; border-radius:.6rem; }
+#ibanInput{ letter-spacing:.04rem; font-variant-numeric:tabular-nums; }
+.sheet-hint{
+  margin-top:.8rem; min-height:1.6rem;
+  display:flex; justify-content:flex-end; gap:1rem;
+  font-size:1.3rem; line-height:1.6rem; color:rgba(255,255,255,.5); text-align:left;
+}
+
+/* ===================== LANGUAGE + RESET (profile) ===================== */
+.sheet-lang{
+  margin-top:1rem; padding:0 1rem 0 1.6rem; height:5.2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  border-radius:1.4rem; background:rgba(255,255,255,.08);
+  font-size:1.6rem; font-weight:500; text-align:left;
+}
+.seg{
+  position:relative; display:flex; padding:.2rem;
+  border-radius:999px; background:rgba(120,120,128,.32);
+}
+.seg button{
+  position:relative; z-index:1;
+  min-width:5.2rem; height:3.2rem; padding:0 1.2rem; border-radius:999px;
+  font-size:1.4rem; font-weight:600; color:rgba(255,255,255,.7);
+  transition:color .2s ease, background-color .2s ease;
+}
+.seg button[aria-checked="true"]{ background:#fff; color:#0a0a0f; box-shadow:0 .1rem .4rem rgba(0,0,0,.18); }
+.seg button:focus-visible{ outline:.2rem solid rgba(255,255,255,.6); outline-offset:.1rem; }
+.sheet-link{
+  display:block; width:100%; margin-top:1.4rem; padding:.8rem 0;
+  font-size:1.5rem; font-weight:600; text-align:center;
+}
+.sheet-link.danger{ color:#ff6b78; }
+.sheet-link:active{ opacity:.6; }
+
+/* ===================== LIVE ACCOUNT (balance + transactions) ===================== */
+.tx-sheet h3{ margin-bottom:2rem; }
+.tx-list{ text-align:left; padding:0 .2rem .4rem; }
+.tx-list .tx + .tx{ margin-top:2.6rem; }
+.tx-list .tx .badge{ box-shadow:0 0 0 .16rem #251f59; } /* ring matches the sheet, not the card */
+.tx-empty{ padding:2rem 0; text-align:center; font-size:1.5rem; color:rgba(255,255,255,.6); }
+
+/* no visible scrollbars (pages and sheets still scroll by touch, wheel and keyboard) */
+*{ scrollbar-width:none; -ms-overflow-style:none; }
+*::-webkit-scrollbar{ display:none; width:0; height:0; }
+
+/* ===================== SETUP PROGRESS (0-5 steps) ===================== */
+/* the ring is a 300° track with the gap at the bottom: blue = done steps, grey = the rest.
+   app.js sets the dash lengths and start angles; they animate between steps */
+.ring circle{
+  transform-origin:38px 38px;
+  transition:stroke-dasharray .5s cubic-bezier(.3,.9,.3,1), transform .5s cubic-bezier(.3,.9,.3,1), opacity .2s ease;
+}
+.sheet-progress{
+  margin-top:1.8rem; padding:0 .8rem 0 1.6rem; height:5.2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  border-radius:1.4rem; background:rgba(255,255,255,.08);
+  font-size:1.6rem; font-weight:500; text-align:left;
+}
+.stepper{
+  display:flex; align-items:center;
+  height:3.6rem; border-radius:999px; background:rgba(120,120,128,.32);
+}
+.step-btn{
+  width:4.6rem; height:100%; border-radius:999px;
+  display:flex; align-items:center; justify-content:center;
+  transition:background-color .15s, opacity .15s;
+}
+.step-btn svg{ width:1.9rem; height:1.9rem; }
+.step-btn:active{ background:rgba(255,255,255,.14); }
+.step-btn:disabled{ opacity:.3; cursor:default; background:none; }
+.step-value{
+  min-width:4.2rem; text-align:center;
+  font-size:1.6rem; font-weight:700; font-variant-numeric:tabular-nums;
+}
